@@ -1,0 +1,108 @@
+{
+	"name": "SourceDataset_gub",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "numeric",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "CREATE_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IS_CLIENT",
+				"type": "char",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "TRI_DEALER_CODE",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "CREATOR",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "IS_DELETED",
+				"type": "char",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "lock_version",
+				"type": "numeric",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "MODIFY_USER",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "BARCODE",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "DOCUMENT_NUM",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "IS_USE",
+				"type": "char",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "ORDER_NUM",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "PRODUCT_CODE",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "PRODUCT_NAME",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "T_ORG_BARCODE_USE"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

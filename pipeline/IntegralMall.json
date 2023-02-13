@@ -1,0 +1,105 @@
+{
+	"name": "IntegralMall",
+	"properties": {
+		"activities": [
+			{
+				"name": "IntegralMall",
+				"description": "积分平台，每日获取当前所有用户积分情况",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Destination",
+						"value": "wxm//IntegralMallFile"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['id']"
+								},
+								"sink": {
+									"name": "id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['name']"
+								},
+								"sink": {
+									"name": "name"
+								}
+							},
+							{
+								"source": {
+									"path": "$['nickname']"
+								},
+								"sink": {
+									"name": "nickname"
+								}
+							},
+							{
+								"source": {
+									"path": "$['jifen']"
+								},
+								"sink": {
+									"name": "jifen"
+								}
+							},
+							{
+								"source": {
+									"path": "$['b01']"
+								},
+								"sink": {
+									"name": "b01"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_IntegralMall",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_IntegralMall",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-10-09T05:34:33Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

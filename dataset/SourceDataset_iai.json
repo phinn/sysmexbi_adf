@@ -1,0 +1,13 @@
+{
+	"name": "SourceDataset_iai",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNCS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

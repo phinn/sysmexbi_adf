@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_yufukuan",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "ods",
+			"table": "OA_预付款申请"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

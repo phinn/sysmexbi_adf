@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_nna",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "view_inventory_amount_now_copy"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

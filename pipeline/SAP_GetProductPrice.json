@@ -1,0 +1,488 @@
+{
+	"name": "SAP_GetProductPrice",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetaccessToken",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "http://10.40.20.218:8081/Auth/GetAccessToken?systemNo=bi",
+					"connectVia": {
+						"referenceName": "selfhosted",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET"
+				}
+			},
+			{
+				"name": "accessToken",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "GetaccessToken",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "AccessToken",
+					"value": {
+						"value": "@activity('GetaccessToken').output.Response",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "SAPProductPrice",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "accessToken",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "10:00:00",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"additionalHeaders": {
+							"accessToken": {
+								"value": "@variables('AccessToken')",
+								"type": "Expression"
+							},
+							"env": "Production"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['secondProductLineCode']"
+								},
+								"sink": {
+									"name": "secondProductLineCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['productCategoryCode']"
+								},
+								"sink": {
+									"name": "productCategoryCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['productNo']"
+								},
+								"sink": {
+									"name": "productNo",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['productName']"
+								},
+								"sink": {
+									"name": "productName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['productLineCode']"
+								},
+								"sink": {
+									"name": "productLineCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['productLineName']"
+								},
+								"sink": {
+									"name": "productLineName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['salesUnitName']"
+								},
+								"sink": {
+									"name": "salesUnitName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['salesUnitNo']"
+								},
+								"sink": {
+									"name": "salesUnitNo",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['basicPrice']"
+								},
+								"sink": {
+									"name": "basicPrice",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['planDeliveryDays']"
+								},
+								"sink": {
+									"name": "planDeliveryDays",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['updateDate']"
+								},
+								"sink": {
+									"name": "updateDate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['createDate']"
+								},
+								"sink": {
+									"name": "createDate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['isDangerous']"
+								},
+								"sink": {
+									"name": "isDangerous",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['bomsn']"
+								},
+								"sink": {
+									"name": "bomsn",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_SAPProductPrice",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_SAPProductPrice",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_SAPProductPrice",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "SAPProductPrice",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"additionalColumns": [
+							{
+								"name": "InsertTime",
+								"value": {
+									"value": "@getPastTime(16,'Hour','yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "productNo",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ProductNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "productName",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ProductName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "productCategoryCode",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ProductCategoryCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "productLineCode",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ProductLineCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "productLineName",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ProductLineName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "secondProductLineCode",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "SecondProductLineCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "salesUnitNo",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "SalesUnitNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "salesUnitName",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "SalesUnitName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "basicPrice",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "BasicPrice",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "planDeliveryDays",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "PlanDeliveryDays",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "isDangerous",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "IsDangerous",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "bomsn",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Bomsn",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "createDate",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "updateDate",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "UpdateDate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "InsertTime"
+								},
+								"sink": {
+									"name": "InsertTime",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DestinationDataset_SAPProductPrice",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_SAPProductPriceDB",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"variables": {
+			"AccessToken": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-12-02T05:40:23Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_DailyVisittrendDetail",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "ods",
+			"table": "DailyVisittrendDetail"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

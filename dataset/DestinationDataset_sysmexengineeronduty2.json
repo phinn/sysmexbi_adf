@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_sysmexengineeronduty2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "WX_sysmexengineeronduty"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

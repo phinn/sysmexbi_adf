@@ -1,0 +1,7435 @@
+{
+	"name": "FC",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_jpc",
+				"description": "差旅日常",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_jpc",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Stored procedure1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "ods.@{item().destination.table}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink"
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false,
+								"translator": {
+									"value": "@item().copyActivity.translator",
+									"type": "Expression"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_OA_FC",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_jpc",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().destination.table"
+									}
+								}
+							]
+						},
+						{
+							"name": "Stored procedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[USP_TruncateTableFC_OA]"
+							},
+							"linkedServiceName": {
+								"referenceName": "Report",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Stored procedure2",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateTableFC_OA]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_utx",
+				"description": "银行付款",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.View_银行付款及预付款结算"
+					},
+					{
+						"name": "Destination",
+						"value": "ods.OA_银行付款及预付款结算"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "汇率",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 6,
+									"precision": 20
+								},
+								"sink": {
+									"name": "汇率",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 6,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "人民币金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "人民币金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "财务确认金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "财务确认金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "实际金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "实际金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "会计科目代码",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "会计科目代码",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "会计科目名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "会计科目名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OAID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "OAID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "状态",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "状态",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "表单名称",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "表单名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务终审日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务终审日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "入账日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "入账日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "对公对私",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "对公对私",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "会议类型",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "会议类型",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "会议费用日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "会议费用日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "收款户名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "收款户名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "合同预定付款日",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "合同预定付款日",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "用途",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "用途",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "详细说明",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "详细说明",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预算号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预算号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预算号描述",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预算号描述",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预算号大类",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预算号大类",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "成本中心",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "成本中心",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请人所属部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请人所属部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "表单提交日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "表单提交日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "币种",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "币种",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务签收日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务签收日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "供应商编号SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "供应商编号SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目代码员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目代码员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目名称员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目名称员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目代码供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目代码供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目名称供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目名称供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "退单或扣减原因",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 20
+								},
+								"sink": {
+									"name": "退单或扣减原因",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "其他退单或扣减原因",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "其他退单或扣减原因",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务签收人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "财务签收人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务初审通过日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务初审通过日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "财务初审姓名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "财务初审姓名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "推广会申请流水号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "推广会申请流水号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "推广会结算流水号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "推广会结算流水号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_OA_FC2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_DW_FC2",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_uja",
+				"description": "银行付款进项税",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.View_银行付款及预付款结算_进项税"
+					},
+					{
+						"name": "Destination",
+						"value": "ods.OA_银行付款及预付款结算_进项税"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "SEQ",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "SEQ",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "票号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "票号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "税率",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 4,
+									"precision": 20
+								},
+								"sink": {
+									"name": "税率",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 4,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "未税金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "未税金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "CAL税额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "CAL税额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "科目号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "科目号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "会计科目名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "会计科目名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "会计科目代码",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "会计科目代码",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "类别名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "类别名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "总额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "总额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "OAID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "OAID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "状态",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "状态",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "表单名称",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "表单名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务终审日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务终审日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "入账日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "入账日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "对公对私",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "对公对私",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "会议类型",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "会议类型",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "会议费用日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "会议费用日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "收款户名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "收款户名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "合同预定付款日",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "合同预定付款日",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "用途",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "用途",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "详细说明",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "详细说明",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预算号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预算号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预算号描述",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预算号描述",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "成本中心",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "成本中心",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请人所属部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请人所属部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "表单提交日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "表单提交日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "币种",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "币种",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务签收日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务签收日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "供应商编号SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "供应商编号SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目代码员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目代码员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目名称员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目名称员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目代码供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目代码供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目名称供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目名称供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "退单或扣减原因",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 20
+								},
+								"sink": {
+									"name": "退单或扣减原因",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "其他退单或扣减原因",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "其他退单或扣减原因",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务签收人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "财务签收人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务初审通过日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务初审通过日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "财务初审姓名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "财务初审姓名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_FC3_bank_jinxiangshui",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_FC3_bank_jinxiangshui",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_yufukuan",
+				"description": "预付款申请",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.View_预付款申请"
+					},
+					{
+						"name": "Destination",
+						"value": "ods.OA_预付款申请"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "truncate table ods.OA_预付款申请;",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": true
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "SEQ",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "SEQ",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "汇率",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 6,
+									"precision": 20
+								},
+								"sink": {
+									"name": "汇率",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 6,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "人民币金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "人民币金额",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "借方科目代码",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "借方科目代码",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "OAID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "OAID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "状态",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "状态",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "表单名称",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "表单名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预计结算日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "预计结算日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "入账日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "入账日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "对公对私",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 20
+								},
+								"sink": {
+									"name": "对公对私",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "会议类型",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "会议类型",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "会议费用日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "会议费用日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "供应商单位名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "供应商单位名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预计费用类别",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预计费用类别",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预计费用类别科目",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预计费用类别科目",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预算号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预算号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "成本中心",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "成本中心",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请人所属部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请人所属部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "申请部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "申请部门",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "表单提交日期",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "表单提交日期",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "币种",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "币种",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务签收日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务签收日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "供应商编号SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "供应商编号SAP",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目代码员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目代码员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目名称员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目名称员工",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目代码供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目代码供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "贷方科目名称供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "贷方科目名称供应商",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "退单或扣减原因",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 20
+								},
+								"sink": {
+									"name": "退单或扣减原因",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 20
+								}
+							},
+							{
+								"source": {
+									"name": "其他退单或扣减原因",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "其他退单或扣减原因",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务签收人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "财务签收人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务初审通过日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务初审通过日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "财务初审姓名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "财务初审姓名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预算号描述",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预算号描述",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "预付款用途",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "预付款用途",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "凭证号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "凭证号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "财务暂存待办日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "财务暂存待办日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_yufukuan",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_yufukuan",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "ForEach_p8u",
+				"description": "推广会",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items2",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_p8u",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": true
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false,
+								"translator": {
+									"value": "@item().copyActivity.translator",
+									"type": "Expression"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_tuiguanghui",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_tuiguanghui",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().destination.table"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Stored procedure3",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateTuiguanghui]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_csdccreport",
+				"description": "给客服分析专用的，report-》dw",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ForEach_jpc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy_utx",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy_uja",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.View_CCReport_CSD"
+					},
+					{
+						"name": "Destination",
+						"value": "report//csdccreport"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_csdccreport",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_csdccreport",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Stored procedure4",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEach_p8u",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[updateTuiguanghuijiesuan]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "View_差旅_业务招待"
+						},
+						"destination": {
+							"table": "OA_差旅_业务招待"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "招待单位",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "招待单位",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "汇率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 20
+										},
+										"sink": {
+											"name": "汇率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "人民币金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "人民币金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_差旅_交通"
+						},
+						"destination": {
+							"table": "OA_差旅_交通"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "出发日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "出发日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "始端",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "始端",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "汇率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 20
+										},
+										"sink": {
+											"name": "汇率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "人民币金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "人民币金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_差旅_住宿"
+						},
+						"destination": {
+							"table": "OA_差旅_住宿"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "出发日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "出发日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "住宿地点",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "住宿地点",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "T出差天数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 1,
+											"precision": 20
+										},
+										"sink": {
+											"name": "T出差天数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "出差天数数字",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 1,
+											"precision": 20
+										},
+										"sink": {
+											"name": "出差天数数字",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "住宿费",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "住宿费",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "汇率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 20
+										},
+										"sink": {
+											"name": "汇率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "人民币金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "人民币金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "误餐费",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "误餐费",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "误餐费标准",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "误餐费标准",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认住宿费",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认住宿费",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认误餐费",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认误餐费",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额住宿费",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额住宿费",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额误餐费",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额误餐费",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "住宿费超标原因",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "住宿费超标原因",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_差旅_其他"
+						},
+						"destination": {
+							"table": "OA_差旅_其他"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "摘要",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "摘要",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "汇率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 20
+										},
+										"sink": {
+											"name": "汇率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "人民币金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "人民币金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_差旅_进项税"
+						},
+						"destination": {
+							"table": "OA_差旅_进项税"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "票号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "票号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "税率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "税率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "未税金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "未税金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CAL税额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "CAL税额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "科目号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "科目号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "类别名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "类别名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "总额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "总额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_日常_业务招待"
+						},
+						"destination": {
+							"table": "OA_日常_业务招待"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "招待单位",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "招待单位",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "汇率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 20
+										},
+										"sink": {
+											"name": "汇率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "人民币金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "人民币金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_日常_交通"
+						},
+						"destination": {
+							"table": "OA_日常_交通"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "出发日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "出发日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "始端",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "始端",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "汇率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 20
+										},
+										"sink": {
+											"name": "汇率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "人民币金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "人民币金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_日常_其他"
+						},
+						"destination": {
+							"table": "OA_日常_其他"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "摘要",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "摘要",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "汇率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 20
+										},
+										"sink": {
+											"name": "汇率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "人民币金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "人民币金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_日常_进项税"
+						},
+						"destination": {
+							"table": "OA_日常_进项税"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "票号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "票号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "税率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 22
+										},
+										"sink": {
+											"name": "税率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "未税金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "未税金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CAL税额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "CAL税额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "科目号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "科目号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "类别名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "类别名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "总额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "总额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_私车_结算"
+						},
+						"destination": {
+							"table": "OA_私车_结算"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "出发日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "出发日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "始端",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "始端",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "终端",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "终端",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "汇率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 20
+										},
+										"sink": {
+											"name": "汇率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "人民币金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 6,
+											"precision": 38
+										},
+										"sink": {
+											"name": "人民币金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "财务确认金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "财务确认金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目代码",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目代码",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会计科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会计科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务终审日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务终审日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "入账日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "入账日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "成本中心",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "成本中心",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "表单提交日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "表单提交日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "币种",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "币种",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务签收日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "供应商编号SAP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "供应商编号SAP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目标识",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目标识",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "贷方科目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "贷方科目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "退单或扣减原因",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "退单或扣减原因",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "私车公用申请表",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "私车公用申请表",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务签收人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务签收人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审通过日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "财务初审通过日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "财务初审姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "财务初审姓名",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					}
+				]
+			},
+			"cw_items2": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "View_推广会申请表"
+						},
+						"destination": {
+							"table": "OA_推广会申请表"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "申请日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "员工工号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "员工工号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "活动日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "活动日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "所属省份",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "所属省份",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "所属办事处",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "所属办事处",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "活动名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "活动名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "参会人数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "参会人数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "活动地点",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "活动地点",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "要求医院覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "要求医院覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "合作单位",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "合作单位",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex用户覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "Sysmex用户覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex用户医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "Sysmex用户医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "非Sysmex用户覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "非Sysmex用户覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "非Sysmex用户医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "非Sysmex用户医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "医院覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "医院覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "要求课题数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "要求课题数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "课题覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "课题覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会议性质",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会议性质",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "经销商姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "经销商姓名",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "经销商电话",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "经销商电话",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex活动总预算",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "Sysmex活动总预算",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex自办会议",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Sysmex自办会议",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex参加第三方会议",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Sysmex参加第三方会议",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办会议合计",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "自办会议合计",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办会议合计",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "非自办会议合计",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "预算金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "预算金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "结算状态",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "结算状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "产品经理",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "产品经理",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "推广会类型",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "推广会类型",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "field0095",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "field0095",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "field0101",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "field0101",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "预算号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "预算号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "预算号描述",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "预算号描述",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会申请表会议内容明细"
+						},
+						"destination": {
+							"table": "OA_推广会申请表会议内容明细"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "formmain_id",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "formmain_id",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "序号",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "序号",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会议内容",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会议内容",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会申请表会议明细"
+						},
+						"destination": {
+							"table": "OA_推广会申请表会议明细"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "formmain_id",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "formmain_id",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "项目",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "备注",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "备注",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "会议分类",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "会议分类",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会申请表覆盖医院"
+						},
+						"destination": {
+							"table": "OA_推广会申请表覆盖医院"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "formmain_id",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "formmain_id",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "医院Id",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "医院Id",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "医院名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "医院名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "医院等级",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "医院等级",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会申请表讲师课题明细"
+						},
+						"destination": {
+							"table": "OA_推广会申请表讲师课题明细"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "formmain_id",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "formmain_id",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "讲师",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "讲师",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "适用课题类别",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "适用课题类别",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "课题内容",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "课题内容",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会结算实际费用明细"
+						},
+						"destination": {
+							"table": "OA_推广会结算实际费用明细"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "formmain_id",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "formmain_id",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "项目",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "备注",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "备注",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会结算表"
+						},
+						"destination": {
+							"table": "OA_推广会结算表"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "状态",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "申请日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "员工工号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "员工工号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请人所属部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请人所属部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请部门",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "申请部门",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "活动日期",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "活动日期",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "所属省份",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "所属省份",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "所属办事处",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "所属办事处",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "活动名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "活动名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "参会人数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "参会人数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "活动地点",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "活动地点",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "要求医院覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "要求医院覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "合作单位",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "合作单位",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex用户覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "Sysmex用户覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex用户医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "Sysmex用户医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "非Sysmex用户覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "非Sysmex用户覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "非Sysmex用户医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "非Sysmex用户医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "医院覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "医院覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "要求课题数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "要求课题数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "课题覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "课题覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会议性质",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会议性质",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "经销商姓名",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "经销商姓名",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "经销商电话",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "经销商电话",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex活动总预算",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "Sysmex活动总预算",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex自办会议",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Sysmex自办会议",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex参加第三方会议",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Sysmex参加第三方会议",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "申请费用",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "申请费用",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "合计1",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "合计1",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "预算金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "预算金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "结算状态",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "结算状态",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "产品经理",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "产品经理",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "推广会类型",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "推广会类型",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "field0126",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "field0126",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "field0125",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "field0125",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "预算号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "预算号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "预算号描述",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "预算号描述",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "推广会申请流水号",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "推广会申请流水号",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "实际参会人数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际参会人数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际Sysmex用户覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际Sysmex用户覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际Sysmex用户医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际Sysmex用户医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际非Sysmex用户覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际非Sysmex用户覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际非Sysmex用户医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际非Sysmex用户医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际医院覆盖数",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际医院覆盖数",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际医院覆盖率",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 4,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际医院覆盖率",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Sysmex实际花费总预算",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "Sysmex实际花费总预算",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "实际费用",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "实际费用",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "自办复选活动计划书",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办复选活动计划书",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办复选预付款结算单",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办复选预付款结算单",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办复选银行付款申请书发票",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办复选银行付款申请书发票",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办复选签到表",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办复选签到表",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办复选合同",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办复选合同",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办复选日程照片",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办复选日程照片",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办单号编号活动计划书",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办单号编号活动计划书",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办单号编号预付款结算单",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办单号编号预付款结算单",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办单号编号银行付款申请书发票",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办单号编号银行付款申请书发票",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办单号编号签到表",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办单号编号签到表",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办单号编号合同",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办单号编号合同",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "自办单号编号日程照片",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "自办单号编号日程照片",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办复选预付款结算单",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "非自办复选预付款结算单",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办复选银行付款申请书发票",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "非自办复选银行付款申请书发票",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办复选合同",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "非自办复选合同",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办复选日程照片",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "非自办复选日程照片",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办单号编号预付款结算单",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "非自办单号编号预付款结算单",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办单号编号银行付款申请书发票",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "非自办单号编号银行付款申请书发票",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办单号编号合同",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "非自办单号编号合同",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "非自办单号编号日程照片",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "非自办单号编号日程照片",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "老系统推广会结算",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "老系统推广会结算",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "扣分理由",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "扣分理由",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会结算表会议内容明细"
+						},
+						"destination": {
+							"table": "OA_推广会结算表会议内容明细"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "formmain_id",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "formmain_id",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "序号",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "序号",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "会议内容",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "会议内容",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会结算表申请明细"
+						},
+						"destination": {
+							"table": "OA_推广会结算表申请明细"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "formmain_id",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "formmain_id",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "项目",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "金额",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "金额",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "备注",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "备注",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_推广会结算表讲师课题明细"
+						},
+						"destination": {
+							"table": "OA_推广会结算表讲师课题明细"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "formmain_id",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "formmain_id",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "讲师",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "讲师",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "适用课题类别",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "适用课题类别",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "课题内容",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "课题内容",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-12-01T01:53:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

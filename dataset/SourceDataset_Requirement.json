@@ -1,0 +1,130 @@
+{
+	"name": "SourceDataset_Requirement",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "decimal",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "state",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "finishedflag",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OAID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ApplicationDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "MainSubject",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Content",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ChangeSystem",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Influence",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RiskAnalysis",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PlannedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WorkDays",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "WorkDayType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ChangePlan",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EquipmentMonitoring",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MonitoringPlan",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FallbackPlan",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EstimateDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ApplicationDepartment",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Applicant",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ApplicationManager",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ChangeType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ChangeSource",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ChangeClassify",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CurrentUser",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "view_Requirement"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

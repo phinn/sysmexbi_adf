@@ -1,0 +1,46 @@
+{
+	"name": "SourceDataset_ProductMDM_barcode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "decimal",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "BASIC_PRICE",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "CATEGORY_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "OLDCODE",
+				"type": "varchar"
+			},
+			{
+				"name": "ZMANA",
+				"type": "varchar"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

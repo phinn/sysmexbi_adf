@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_FittingBarcode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "FittingBarcode"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

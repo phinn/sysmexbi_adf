@@ -1,0 +1,88 @@
+{
+	"name": "SourceDataset_OA_ServiceAndDaily",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "tableName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sysUserNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sysUserName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EventType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TEL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProvinceName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CityName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "channel",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WorkDetail",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Status",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Product",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsDirectService",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Createdtime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "OA_ServiceAndDaily"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

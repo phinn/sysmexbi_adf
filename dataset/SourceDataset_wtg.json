@@ -1,0 +1,16 @@
+{
+	"name": "SourceDataset_wtg",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNCS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`error_alarm_merge`"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

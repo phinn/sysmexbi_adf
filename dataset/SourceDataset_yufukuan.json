@@ -1,0 +1,180 @@
+{
+	"name": "SourceDataset_yufukuan",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "SEQ",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "金额",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 2
+			},
+			{
+				"name": "汇率",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 6
+			},
+			{
+				"name": "人民币金额",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 2
+			},
+			{
+				"name": "借方科目代码",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OAID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "状态",
+				"type": "varchar"
+			},
+			{
+				"name": "表单名称",
+				"type": "varchar"
+			},
+			{
+				"name": "预计结算日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "入账日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "对公对私",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "会议类型",
+				"type": "nvarchar"
+			},
+			{
+				"name": "会议费用日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "供应商单位名称",
+				"type": "nvarchar"
+			},
+			{
+				"name": "预计费用类别",
+				"type": "nvarchar"
+			},
+			{
+				"name": "预计费用类别科目",
+				"type": "nvarchar"
+			},
+			{
+				"name": "预算号",
+				"type": "nvarchar"
+			},
+			{
+				"name": "成本中心",
+				"type": "nvarchar"
+			},
+			{
+				"name": "申请人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "申请人所属部门",
+				"type": "nvarchar"
+			},
+			{
+				"name": "申请部门",
+				"type": "nvarchar"
+			},
+			{
+				"name": "表单提交日期",
+				"type": "nvarchar"
+			},
+			{
+				"name": "币种",
+				"type": "nvarchar"
+			},
+			{
+				"name": "财务签收日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "供应商编号SAP",
+				"type": "nvarchar"
+			},
+			{
+				"name": "贷方科目代码员工",
+				"type": "nvarchar"
+			},
+			{
+				"name": "贷方科目名称员工",
+				"type": "nvarchar"
+			},
+			{
+				"name": "贷方科目代码供应商",
+				"type": "nvarchar"
+			},
+			{
+				"name": "贷方科目名称供应商",
+				"type": "nvarchar"
+			},
+			{
+				"name": "退单或扣减原因",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "其他退单或扣减原因",
+				"type": "nvarchar"
+			},
+			{
+				"name": "财务签收人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "财务初审通过日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "财务初审姓名",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_预付款申请"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,28 @@
+{
+	"name": "DestinationDataset_UpdatedOrderItems",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@getPastTime(16,'Hour','yyyyMMdd')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "UpdatedOrderItems",
+					"type": "Expression"
+				},
+				"fileSystem": "sapdata"
+			},
+			"compressionCodec": "gzip"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

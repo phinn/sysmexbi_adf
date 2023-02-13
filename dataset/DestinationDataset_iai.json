@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_iai",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "SNCSReagent"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

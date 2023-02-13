@@ -1,0 +1,26 @@
+{
+	"name": "DestinationDataset_HUAXIN_ForcastOrderDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ForcastOrderNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ForcastOrderMonth",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "HUAXIN_ForcastOrder"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

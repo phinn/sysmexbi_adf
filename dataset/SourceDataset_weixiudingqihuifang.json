@@ -1,0 +1,101 @@
+{
+	"name": "SourceDataset_weixiudingqihuifang",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ServerBI_51",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "主键",
+				"type": "nvarchar"
+			},
+			{
+				"name": "客户名称",
+				"type": "nvarchar"
+			},
+			{
+				"name": "医院ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "医院等级",
+				"type": "nvarchar"
+			},
+			{
+				"name": "省份",
+				"type": "nvarchar"
+			},
+			{
+				"name": "仪器型号",
+				"type": "nvarchar"
+			},
+			{
+				"name": "服务内容",
+				"type": "nvarchar"
+			},
+			{
+				"name": "维修开始时间",
+				"type": "date"
+			},
+			{
+				"name": "联系人姓名",
+				"type": "nvarchar"
+			},
+			{
+				"name": "电话",
+				"type": "nvarchar"
+			},
+			{
+				"name": "地区",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UserType",
+				"type": "varchar"
+			},
+			{
+				"name": "Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "QuestionScore1",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "QuestionScore2",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "QuestionScore3",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "QuestionScore4",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Evaluate",
+				"type": "int",
+				"precision": 10
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

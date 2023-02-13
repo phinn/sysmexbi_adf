@@ -1,0 +1,462 @@
+{
+	"name": "CRM_Extension",
+	"properties": {
+		"description": "CRM扩展库数据抽取任务",
+		"activities": [
+			{
+				"name": "ForEach_CrmExtension",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items1",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_CrmExtension",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "crmextension//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_z4t",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_z4t",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "USP_Insert_NeoIncident",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Insert_NeoIncident]"
+				},
+				"linkedServiceName": {
+					"referenceName": "CRMExtension",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_NeoIncident",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "USP_Insert_NeoIncident",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CRMExtension_NeoIncident",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dw_NeoIncident",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "ForEach_CrmExtension_copy1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ForEach_CrmExtension",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items2",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_CrmExtension_copy1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "crmextension//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_z4t",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_z4t",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cw_items1": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "handsign"
+						},
+						"destination": {
+							"fileName": "dbo.handsign"
+						}
+					},
+					{
+						"source": {
+							"table": "handsignDealer"
+						},
+						"destination": {
+							"fileName": "dbo.handsignDealer"
+						}
+					},
+					{
+						"source": {
+							"table": "incident"
+						},
+						"destination": {
+							"fileName": "dbo.incident"
+						}
+					},
+					{
+						"source": {
+							"table": "incidentDealer"
+						},
+						"destination": {
+							"fileName": "dbo.incidentDealer"
+						}
+					},
+					{
+						"source": {
+							"table": "incidentIt"
+						},
+						"destination": {
+							"fileName": "dbo.incidentIt"
+						}
+					},
+					{
+						"source": {
+							"table": "incidentMarket"
+						},
+						"destination": {
+							"fileName": "dbo.incidentMarket"
+						}
+					},
+					{
+						"source": {
+							"table": "incidentSales"
+						},
+						"destination": {
+							"fileName": "dbo.incidentSales"
+						}
+					},
+					{
+						"source": {
+							"table": "incidentStudy"
+						},
+						"destination": {
+							"fileName": "dbo.incidentStudy"
+						}
+					}
+				]
+			},
+			"cw_to_CrmExtension_items": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "errorcount_m40"
+						},
+						"destination": {
+							"table": "errorcount_m40"
+						}
+					}
+				]
+			},
+			"cw_items2": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "Maintenance"
+						},
+						"destination": {
+							"fileName": "dbo.Maintenance"
+						}
+					},
+					{
+						"source": {
+							"table": "Maintenance_Photos"
+						},
+						"destination": {
+							"fileName": "dbo.Maintenance_Photos"
+						}
+					},
+					{
+						"source": {
+							"table": "Maintenance_Project_Items"
+						},
+						"destination": {
+							"fileName": "dbo.Maintenance_Project_Items"
+						}
+					},
+					{
+						"source": {
+							"table": "Maintenance_Task_Dealer"
+						},
+						"destination": {
+							"fileName": "dbo.Maintenance_Task_Dealer"
+						}
+					},
+					{
+						"source": {
+							"table": "Maintenance_Task_Server"
+						},
+						"destination": {
+							"fileName": "dbo.Maintenance_Task_Server"
+						}
+					},
+					{
+						"source": {
+							"table": "photos"
+						},
+						"destination": {
+							"fileName": "dbo.photos"
+						}
+					},
+					{
+						"source": {
+							"table": "Finance_Crm_DealerCostDict"
+						},
+						"destination": {
+							"fileName": "dbo.Finance_Crm_DealerCostDict"
+						}
+					},
+					{
+						"source": {
+							"table": "Finance_Crm_ServiceProductCostDict"
+						},
+						"destination": {
+							"fileName": "dbo.Finance_Crm_ServiceProductCostDict"
+						}
+					},
+					{
+						"source": {
+							"table": "M2MRecycle"
+						},
+						"destination": {
+							"fileName": "dbo.M2MRecycle"
+						}
+					},
+					{
+						"source": {
+							"table": "ServerView_instrumentView_MachineLearning"
+						},
+						"destination": {
+							"fileName": "dbo.ServerView_instrumentView_MachineLearning"
+						}
+					},
+					{
+						"source": {
+							"table": "ActionTimes"
+						},
+						"destination": {
+							"fileName": "dbo.ActionTimes"
+						}
+					},
+					{
+						"source": {
+							"table": "Maintenance_Task_Server_ML_Timeout"
+						},
+						"destination": {
+							"fileName": "dbo.Maintenance_Task_Server_ML_Timeout"
+						}
+					},
+					{
+						"source": {
+							"table": "Maintenance_Task_Server_ML"
+						},
+						"destination": {
+							"fileName": "dbo.Maintenance_Task_Server_ML"
+						}
+					},
+					{
+						"source": {
+							"table": "Verification"
+						},
+						"destination": {
+							"fileName": "dbo.Verification"
+						}
+					},
+					{
+						"source": {
+							"table": "VerificationItem"
+						},
+						"destination": {
+							"fileName": "dbo.VerificationItem"
+						}
+					},
+					{
+						"source": {
+							"table": "VerificationPhoto"
+						},
+						"destination": {
+							"fileName": "dbo.VerificationPhoto"
+						}
+					},
+					{
+						"source": {
+							"table": "InstallationStop"
+						},
+						"destination": {
+							"fileName": "dbo.InstallationStop"
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-12-02T03:35:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

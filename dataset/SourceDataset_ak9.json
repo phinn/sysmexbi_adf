@@ -1,0 +1,38 @@
+{
+	"name": "SourceDataset_ak9",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MDM",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "工程师",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "职位",
+				"type": "nvarchar"
+			},
+			{
+				"name": "省份",
+				"type": "nvarchar"
+			},
+			{
+				"name": "大课",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServerBI_Base_gcs"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

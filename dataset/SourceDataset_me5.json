@@ -1,0 +1,48 @@
+{
+	"name": "SourceDataset_me5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "ServiceId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "InstallationName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OpenId",
+				"type": "varchar"
+			},
+			{
+				"name": "CreateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IsPushed",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServicePush2"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

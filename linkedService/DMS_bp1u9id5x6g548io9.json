@@ -1,0 +1,17 @@
+{
+	"name": "DMS_bp1u9id5x6g548io9",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "rm-bp1u9id5x6g548io9",
+		"annotations": [],
+		"type": "MySql",
+		"typeProperties": {
+			"connectionString": "server=rm-bp1u9id5x6g548io9.mysql.rds.aliyuncs.com;port=3306;database=dmsprd;user=dmsprdadmin;sslmode=1;usesystemtruststore=0",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkYzE1ZDI4NC1jNjRiLTRiMjctOGU0NC1iMGViMGM5MDJiNWUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfhosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

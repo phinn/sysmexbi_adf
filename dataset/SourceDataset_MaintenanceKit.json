@@ -1,0 +1,36 @@
+{
+	"name": "SourceDataset_MaintenanceKit",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "decimal",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_MaintenanceKit"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

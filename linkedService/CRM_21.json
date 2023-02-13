@@ -1,0 +1,17 @@
+{
+	"name": "CRM_21",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "CRM正式服务器",
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=10.32.16.21;initial catalog=HamiSystemDB;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiODc4OGE0Ni0zNDhkLTRmOTgtYjIwZS0zZWNmMzU0YzQ4NjUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfhosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

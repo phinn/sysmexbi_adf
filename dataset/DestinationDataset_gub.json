@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_gub",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "T_ORG_BARCODE_USE"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

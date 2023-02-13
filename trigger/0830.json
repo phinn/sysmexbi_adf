@@ -1,0 +1,59 @@
+{
+	"name": "0830",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "WX",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "HUAXIN",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"pagenumber": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5"
+					]
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "SparePart",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "NewSAPToBarcode",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2020-12-16T02:49:00",
+				"timeZone": "China Standard Time",
+				"schedule": {
+					"minutes": [
+						30
+					],
+					"hours": [
+						8
+					]
+				}
+			}
+		}
+	}
+}

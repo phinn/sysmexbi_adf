@@ -1,0 +1,17 @@
+{
+	"name": "IntegralMall",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Integral mall",
+		"annotations": [],
+		"type": "Web",
+		"typeProperties": {
+			"url": "http://www.damaicheng.com/index.php?r=b/xskmgetconsumer",
+			"authenticationType": "Anonymous"
+		},
+		"connectVia": {
+			"referenceName": "selfhosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

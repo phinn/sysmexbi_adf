@@ -1,0 +1,1445 @@
+{
+	"name": "HUAXIN",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetToken",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://oa.huasin.com.cn/Home/a/login",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"body": "authKey=D9ey1YfHk6THjHPlPFCMjkUfoWUXAdea"
+				}
+			},
+			{
+				"name": "set token",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "GetToken",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "token",
+					"value": {
+						"value": "@activity('GetToken').output.token",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "HUAXIN_Inventories",
+				"description": "华鑫库存",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "set token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "10:00:00",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "POST",
+						"requestBody": {
+							"value": "@concat('token=', variables('token'))",
+							"type": "Expression"
+						},
+						"additionalHeaders": {
+							"Content-Type": {
+								"value": "application/x-www-form-urlencoded",
+								"type": "Expression"
+							}
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['oldgoodsno']"
+								},
+								"sink": {
+									"name": "oldgoodsno",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['goodname']"
+								},
+								"sink": {
+									"name": "goodname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['goods_format']"
+								},
+								"sink": {
+									"name": "goods_format",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['serial_number']"
+								},
+								"sink": {
+									"name": "serial_number",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['batch_number']"
+								},
+								"sink": {
+									"name": "batch_number",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['quality']"
+								},
+								"sink": {
+									"name": "quality",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"path": "['unit']"
+								},
+								"sink": {
+									"name": "unit",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['product_factory']"
+								},
+								"sink": {
+									"name": "product_factory",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['status']"
+								},
+								"sink": {
+									"name": "status",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['ntime']"
+								},
+								"sink": {
+									"name": "ntime",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"path": "['adate']"
+								},
+								"sink": {
+									"name": "adate",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['resdata']",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_HUAXIN_Inventory",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_HUAXIN_Inventory",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy data to Reportss",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "HUAXIN_Inventories",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "Inventories",
+							"wildcardFileName": {
+								"value": "@getPastTime(16,'Hour','yyyyMMdd')",
+								"type": "Expression"
+							},
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "truncate table [dbo].[HUAXIN_Inventory]"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "oldgoodsno",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ProductNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "goodname",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ProductName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "goods_format",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ProductSpec",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "serial_number",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "SerialNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "batch_number",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "BatchNo",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "quality",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "Quantity",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 4,
+									"precision": 18
+								}
+							},
+							{
+								"source": {
+									"name": "unit",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Unit",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "product_factory",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Supplier",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "status",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ntime",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CreatedDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "adate",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ADate",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DestinationDataset_HUAXIN_Inventory",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_HUAXIN_InventoryDB",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "ForEach1",
+				"description": "预测",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.pagenumber",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "HUAXIN_ForcastOrders_copy1",
+							"description": "",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "get_placeanorder"
+								},
+								{
+									"name": "Destination",
+									"value": "huaxin/ForcastOrders/@{getPastTime(16,'Hour','yyyyMMdd')}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "10:00:00",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "POST",
+									"requestBody": {
+										"value": "@concat('token=', variables('token'),'&page=',item())",
+										"type": "Expression"
+									},
+									"additionalHeaders": {
+										"Content-Type": "application/x-www-form-urlencoded"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "['pl_id']"
+											},
+											"sink": {
+												"name": "pl_id",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['apply_month']"
+											},
+											"sink": {
+												"name": "apply_month",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['oldcloentno']"
+											},
+											"sink": {
+												"name": "oldcloentno",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['clientno']"
+											},
+											"sink": {
+												"name": "clientno",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['clientname']"
+											},
+											"sink": {
+												"name": "clientname",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['oldgoodsno']"
+											},
+											"sink": {
+												"name": "oldgoodsno",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['goods_format']"
+											},
+											"sink": {
+												"name": "goods_format",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['unit']"
+											},
+											"sink": {
+												"name": "unit",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['quantity']"
+											},
+											"sink": {
+												"name": "quantity",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "['goodname']"
+											},
+											"sink": {
+												"name": "goodname",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['createtime']"
+											},
+											"sink": {
+												"name": "createtime",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"path": "['type']"
+											},
+											"sink": {
+												"name": "type",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['rem_quantity']"
+											},
+											"sink": {
+												"name": "rem_quantity",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "['lock_quantity']"
+											},
+											"sink": {
+												"name": "lock_quantity",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "['sale_quantity']"
+											},
+											"sink": {
+												"name": "sale_quantity",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "['sale_3']"
+											},
+											"sink": {
+												"name": "sale_3",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['sale_6']"
+											},
+											"sink": {
+												"name": "sale_6",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['sale_lastyear']"
+											},
+											"sink": {
+												"name": "sale_lastyear",
+												"type": "String"
+											}
+										}
+									],
+									"collectionReference": "$['resdata']['data']",
+									"mapComplexValuesToString": false
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_HUAXIN_ForcastOrders",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_HUAXIN_ForcastOrder",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy data to Report DB",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "HUAXIN_ForcastOrders_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "ParquetSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									}
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"tableOption": "autoCreate"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "pl_id",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "ForcastOrderNo",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "apply_month",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "ForcastOrderMonth",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "oldcloentno",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "oldcloentno",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "clientno",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "clientno",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "clientname",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "clientname",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "oldgoodsno",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "oldgoodsno",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "goods_format",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "goodformat",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "unit",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "unit",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "quantity",
+												"type": "Int32",
+												"physicalType": "INT32"
+											},
+											"sink": {
+												"name": "qty",
+												"type": "Int32",
+												"physicalType": "int"
+											}
+										},
+										{
+											"source": {
+												"name": "goodname",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "goodname",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "createtime",
+												"type": "DateTime",
+												"physicalType": "INT96"
+											},
+											"sink": {
+												"name": "createtime",
+												"type": "DateTime",
+												"physicalType": "datetime"
+											}
+										},
+										{
+											"source": {
+												"name": "type",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "type",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "rem_quantity",
+												"type": "Int32",
+												"physicalType": "INT32"
+											},
+											"sink": {
+												"name": "rem_quantity",
+												"type": "Int32",
+												"physicalType": "int"
+											}
+										},
+										{
+											"source": {
+												"name": "lock_quantity",
+												"type": "Int32",
+												"physicalType": "INT32"
+											},
+											"sink": {
+												"name": "lock_quantity",
+												"type": "Int32",
+												"physicalType": "int"
+											}
+										},
+										{
+											"source": {
+												"name": "sale_quantity",
+												"type": "Int32",
+												"physicalType": "INT32"
+											},
+											"sink": {
+												"name": "sale_quantity",
+												"type": "Int32",
+												"physicalType": "int"
+											}
+										},
+										{
+											"source": {
+												"name": "sale_3",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "sale_3",
+												"type": "Int32",
+												"physicalType": "int"
+											}
+										},
+										{
+											"source": {
+												"name": "sale_6",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "sale_6",
+												"type": "Int32",
+												"physicalType": "int"
+											}
+										},
+										{
+											"source": {
+												"name": "sale_lastyear",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "sale_lastyear",
+												"type": "Int32",
+												"physicalType": "int"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DestinationDataset_HUAXIN_ForcastOrder",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_HUAXIN_ForcastOrderDB",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "set token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateHUAXIN]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ForEach2",
+				"description": "订单与预测单关系",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.pagenumber",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "HUAXIN_Orders_ForcastOrderID2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "10:00:00",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "POST",
+									"requestBody": {
+										"value": "@concat('token=', variables('token'),'&page=',item())",
+										"type": "Expression"
+									},
+									"additionalHeaders": {
+										"Content-Type": {
+											"value": "application/x-www-form-urlencoded",
+											"type": "Expression"
+										}
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "['dtime']"
+											},
+											"sink": {
+												"name": "dtime",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['product_factory']"
+											},
+											"sink": {
+												"name": "product_factory",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['oldclientno']"
+											},
+											"sink": {
+												"name": "oldclientno",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['clientname']"
+											},
+											"sink": {
+												"name": "clientname",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['oldgoodsno']"
+											},
+											"sink": {
+												"name": "oldgoodsno",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['goodname']"
+											},
+											"sink": {
+												"name": "goodname",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['goods_format']"
+											},
+											"sink": {
+												"name": "goods_format",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['unit']"
+											},
+											"sink": {
+												"name": "unit",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['batch_number']"
+											},
+											"sink": {
+												"name": "batch_number",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['serial_number']"
+											},
+											"sink": {
+												"name": "serial_number",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['quality']"
+											},
+											"sink": {
+												"name": "quality",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"path": "['type']"
+											},
+											"sink": {
+												"name": "type",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['adate']"
+											},
+											"sink": {
+												"name": "adate",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['pl_id']"
+											},
+											"sink": {
+												"name": "pl_id",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['orderid']"
+											},
+											"sink": {
+												"name": "orderid",
+												"type": "String"
+											}
+										}
+									],
+									"collectionReference": "$['resdata']['data']",
+									"mapComplexValuesToString": false
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_HUAXIN_Orders_ForcastOrderID",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_HUAXIN_Order_ForcastOrderID",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy data to Report2",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "HUAXIN_Orders_ForcastOrderID2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "ParquetSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									}
+								},
+								"sink": {
+									"type": "SqlServerSink"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "dtime",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "dtime",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "product_factory",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "manufacturer",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "oldclientno",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "sellercode",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "clientname",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "sellername",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "oldgoodsno",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "originalprodcode",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "goodname",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "originalprodname",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "goods_format",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "goodsformat",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "unit",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "unit",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "batch_number",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "bunchno",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "serial_number",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "serialno",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "quality",
+												"type": "Decimal",
+												"physicalType": "DECIMAL",
+												"scale": 18,
+												"precision": 38
+											},
+											"sink": {
+												"name": "qty",
+												"type": "Decimal",
+												"physicalType": "decimal",
+												"scale": 5,
+												"precision": 12
+											}
+										},
+										{
+											"source": {
+												"name": "type",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "businesstype",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "adate",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "adate",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "pl_id",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "plid",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "orderid",
+												"type": "String",
+												"physicalType": "UTF8"
+											},
+											"sink": {
+												"name": "orderid",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DestinationDataset_HUAXIN_Order_ForcastOrderID",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_HUAXIN_SalesData_ForcastID",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"pagenumber": {
+				"type": "array",
+				"defaultValue": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6"
+				]
+			}
+		},
+		"variables": {
+			"token": {
+				"type": "String"
+			},
+			"currentPage": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-10-09T05:49:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

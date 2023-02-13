@@ -1,0 +1,129 @@
+{
+	"name": "SourceDataset_mmo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Number",
+				"type": "varchar"
+			},
+			{
+				"name": "Province",
+				"type": "nvarchar"
+			},
+			{
+				"name": "City",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContactName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContactPhone",
+				"type": "varchar"
+			},
+			{
+				"name": "ContactId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Suscribe",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UserType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IsSend",
+				"type": "bit"
+			},
+			{
+				"name": "Code",
+				"type": "varchar"
+			},
+			{
+				"name": "ErrorMsg",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SendTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "QuestionUse",
+				"type": "nvarchar"
+			},
+			{
+				"name": "QuestionScore1",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "QuestionScore2",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "QuestionScore3",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "QuestionScore4",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Remark",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Evaluate",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EvaluateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "InstallerID",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "WX_CallVisit_ServiceCustomer"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

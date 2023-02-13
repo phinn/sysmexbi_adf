@@ -1,0 +1,700 @@
+{
+	"name": "CopyPipeline_DMS_DailyDeliver",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_DailyDeliver",
+				"description": "每日发货",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dms.DailyDeliver"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "--前一天的发货数据，发货日期是前一天，并且审核状态已审核的，因为会变，所以抽数取当前日期的，存下来\nSELECT convert(varchar,getdate()-1,23) as CreateDate,T_ORG_DELIVER.id,DOCUMENT_DATE as 单据日期,T_ORG_DELIVER.DELIVERY_DATE as 发货日期,T_ORG_DELIVER.DEALER_CODE as 代理商编号,NAME1 as 代理商名称,\nwarehouse_name as 出发仓库,province.province as 到货城市,PURCHASE_NUM as 采购订单号,DOCUMENT_NO as 子单号,DOCUMENT_NUM as 出库单号,T_ORG_DELIVER.DELIVERY_NUM as 运单号,\nCategory.NAME as 产品分类,totalQty as 合计数量,temperature as 温度,T_ORG_DELIVER.ACTUAL_CLIENT_ADDRESS as 详细收货人地址,T_ORG_DELIVER.PHONE as 收货人电话,ARRIVAL_DATE as 到货日期,\nT_ORG_DELIVER.weight as 系统重量,T_ORG_DELIVER.volume as 系统体积,T_ORG_TRANSPORT.companyName as 运输公司,T_ORG_DELIVER.auditStatus as 审核状态,threeAudit as 是否第三方 ,ZZMVSTOCK as 是否移库\nFROM T_ORG_DELIVER \nleft join T_ORG_TRANSPORT on T_ORG_TRANSPORT.id = T_ORG_DELIVER.transport_id\nleft join (select distinct province,province_ID  from T_ORG_AREA) province on province.province_ID = to_provinceid\nleft join (select * from [II_PRODUCT_CATEGORY] where edi_trans_time= (select max(edi_trans_time) from [II_PRODUCT_CATEGORY])) Category on Category.CODE = CATEGORY_NAME\nWHERE (T_ORG_DELIVER.IS_DELETED = 'F' AND OUT_TYPE = 'common') and DELIVERY_DATE = convert(varchar,getdate()-1,23) and auditStatus = 'audit'",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": true,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "CreateDate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "id",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 19
+								},
+								"sink": {
+									"name": "id",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "单据日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "单据日期",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "发货日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "发货日期",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "代理商编号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "代理商编号",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "代理商名称",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "代理商名称",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "出发仓库",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "出发仓库",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "到货城市",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "到货城市",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "采购订单号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "采购订单号",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "子单号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "子单号",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "出库单号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "出库单号",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "运单号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "运单号",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "产品分类",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "产品分类",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "合计数量",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "合计数量",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "温度",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "温度",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "详细收货人地址",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "详细收货人地址",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "收货人电话",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "收货人电话",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "到货日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "到货日期",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "系统重量",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "系统重量",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "系统体积",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "系统体积",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "运输公司",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "运输公司",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "审核状态",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "审核状态",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "是否第三方",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "是否第三方",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "是否移库",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "是否移库",
+									"type": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_DMS_DailyDeliver",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_DMS_DailyDeliver",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_DailyUnDeliver",
+				"description": "每日未发货",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dms.DailyUnDeliver"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "--未发货数据，同上，每日保存当天的信息\n--IS_RECEIVING_PARTY移交方确认与否，N是未确认，不用算入\nSELECT convert(varchar,getdate()-1,23) as CreateDate,T_ORG_DELIVER.id,DOCUMENT_DATE as 单据日期,T_ORG_DELIVER.DELIVERY_DATE as 发货日期,T_ORG_DELIVER.DEALER_CODE as 代理商编号,NAME1 as 代理商名称,\nwarehouse_name as 出发仓库,province.province as 到货城市,PURCHASE_NUM as 采购订单号,DOCUMENT_NO as 子单号,DOCUMENT_NUM as 出库单号,T_ORG_DELIVER.DELIVERY_NUM as 运单号,\nCategory.NAME as 产品分类,totalQty as 合计数量,temperature as 温度,T_ORG_DELIVER.ACTUAL_CLIENT_ADDRESS as 详细收货人地址,T_ORG_DELIVER.PHONE as 收货人电话,ARRIVAL_DATE as 到货日期,\nT_ORG_DELIVER.weight as 系统重量,T_ORG_DELIVER.volume as 系统体积,T_ORG_TRANSPORT.companyName as 运输公司,T_ORG_DELIVER.auditStatus as 审核状态,threeAudit as 是否第三方 ,ZZMVSTOCK as 是否移库,IS_PACK as 是否分派\nFROM T_ORG_DELIVER \nleft join T_ORG_TRANSPORT on T_ORG_TRANSPORT.id = T_ORG_DELIVER.transport_id\nleft join (select distinct province,province_ID  from T_ORG_AREA) province on province.province_ID = to_provinceid\nleft join (select * from [II_PRODUCT_CATEGORY] where edi_trans_time= (select max(edi_trans_time) from [II_PRODUCT_CATEGORY])) Category on Category.CODE = CATEGORY_NAME\nWHERE (T_ORG_DELIVER.IS_DELETED = 'F' AND OUT_TYPE = 'common') and ((DELIVERY_DATE >='2022-03-01' and DELIVERY_DATE <= convert(varchar,getdate()-1,23) AND auditStatus = 'unAudit') or (DOCUMENT_DATE >='2022-03-01' and DELIVERY_DATE is null))  and (ZZMVSTOCK is null or ZZMVSTOCK is not null and IS_RECEIVING_PARTY = 'Y')\nand warehouse_code not like 'F%' \norder by DOCUMENT_DATE, DELIVERY_DATE desc ",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": true,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CreateDate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "CreateDate",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "id",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 19
+								},
+								"sink": {
+									"name": "id",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 19
+								}
+							},
+							{
+								"source": {
+									"name": "单据日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "单据日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "发货日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "发货日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "代理商编号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "代理商编号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "代理商名称",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "代理商名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "出发仓库",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "出发仓库",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "到货城市",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "到货城市",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "采购订单号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "采购订单号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "子单号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "子单号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "出库单号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "出库单号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "运单号",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "运单号",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "产品分类",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "产品分类",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "合计数量",
+									"type": "Double",
+									"physicalType": "float"
+								},
+								"sink": {
+									"name": "合计数量",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "温度",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "温度",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "详细收货人地址",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "详细收货人地址",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "收货人电话",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "收货人电话",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "到货日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "到货日期",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "系统重量",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "系统重量",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "系统体积",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "系统体积",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "运输公司",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "运输公司",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "审核状态",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "审核状态",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "是否第三方",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "是否第三方",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "是否移库",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "是否移库",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "是否分派",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "是否分派",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_DMS_DailyUnDeliver",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_DMS_DailyUnDeliver",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-10-09T05:49:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

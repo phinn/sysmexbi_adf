@@ -1,0 +1,293 @@
+{
+	"name": "SourceDataset_2fw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_21",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "AccountId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OwnerId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "PrimaryContactId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Grade",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "HospitalType",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ProvinceId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "CityId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "DistrictId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "IsBindRet",
+				"type": "bit"
+			},
+			{
+				"name": "IsBindXn",
+				"type": "bit"
+			},
+			{
+				"name": "BioItem",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CallTimes",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ComplainTime",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DailyCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IsExterior",
+				"type": "bit"
+			},
+			{
+				"name": "IsGoback",
+				"type": "bit"
+			},
+			{
+				"name": "IsSafety",
+				"type": "bit"
+			},
+			{
+				"name": "JobDes",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HaveRet",
+				"type": "bit"
+			},
+			{
+				"name": "LoginMoney",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "LoginMoneyBase",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Methodty",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SickBedCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IsSpecialXn",
+				"type": "bit"
+			},
+			{
+				"name": "TyItem",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Types",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IsUFBind",
+				"type": "bit"
+			},
+			{
+				"name": "Address1Line1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address1Telephone1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address1Telephone2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address1Postalcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Fax",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NumBerofemployees",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StateCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "StatusCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IsDeleted",
+				"type": "bit"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ModifiedBy",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "ModifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "BloodReagent",
+				"type": "bit"
+			},
+			{
+				"name": "BloodDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Chemistry",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Coagulation",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Hematology",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "UFReagent",
+				"type": "bit"
+			},
+			{
+				"name": "UFDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ImmuneOwnerId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Engineer",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "IsVip",
+				"type": "bit"
+			},
+			{
+				"name": "DealerMcc",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerUf",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Jd",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Wd",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SncsAccount",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsMainBlank",
+				"type": "bit"
+			},
+			{
+				"name": "IsVastecBlank",
+				"type": "bit"
+			},
+			{
+				"name": "IsHuasinBlank",
+				"type": "bit"
+			},
+			{
+				"name": "TelTimeFrom",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "TelTimeTo",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "AccountBase"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

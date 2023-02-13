@@ -1,0 +1,464 @@
+{
+	"name": "MDM_BPCustomer",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetaccessToken",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "http://10.40.20.218:8081/Auth/GetAccessToken?systemNo=bi",
+					"connectVia": {
+						"referenceName": "selfhosted",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET"
+				}
+			},
+			{
+				"name": "accessToken",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "GetaccessToken",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "AccessToken",
+					"value": {
+						"value": "@activity('GetaccessToken').output.Response",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "MDM_GetBPCustomers",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "accessToken",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "/v2/mdm/getDealers?page=1&pageSize=100000"
+					},
+					{
+						"name": "Destination",
+						"value": "dms//@{pipeline().parameters.mdm_dealers}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "10:00:00",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"additionalHeaders": {
+							"accessToken": {
+								"value": "@variables('AccessToken')",
+								"type": "Expression"
+							},
+							"env": "Production"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['id']"
+								},
+								"sink": {
+									"name": "id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['approvedStatus']"
+								},
+								"sink": {
+									"name": "approvedStatus",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['customerNo']"
+								},
+								"sink": {
+									"name": "customerNo"
+								}
+							},
+							{
+								"source": {
+									"path": "['customerNameEN']"
+								},
+								"sink": {
+									"name": "customerNameEN"
+								}
+							},
+							{
+								"source": {
+									"path": "['orderBlock']"
+								},
+								"sink": {
+									"name": "orderBlock",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['deliveryBlock']"
+								},
+								"sink": {
+									"name": "deliveryBlock",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['provinceNo']"
+								},
+								"sink": {
+									"name": "provinceNo"
+								}
+							},
+							{
+								"source": {
+									"path": "['provinceName']"
+								},
+								"sink": {
+									"name": "provinceName"
+								}
+							},
+							{
+								"source": {
+									"path": "['address']"
+								},
+								"sink": {
+									"name": "address"
+								}
+							},
+							{
+								"source": {
+									"path": "['contactPerson']"
+								},
+								"sink": {
+									"name": "contactPerson",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['contactPhone']"
+								},
+								"sink": {
+									"name": "contactPhone",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['cityName']"
+								},
+								"sink": {
+									"name": "cityName"
+								}
+							},
+							{
+								"source": {
+									"path": "['customerName']"
+								},
+								"sink": {
+									"name": "customerName"
+								}
+							},
+							{
+								"source": {
+									"path": "['companyCode']"
+								},
+								"sink": {
+									"name": "companyCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['deletionFlag']"
+								},
+								"sink": {
+									"name": "deletionFlag"
+								}
+							},
+							{
+								"source": {
+									"path": "['eccBPNo']"
+								},
+								"sink": {
+									"name": "eccBPNo",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['updatedTime']"
+								},
+								"sink": {
+									"name": "updatedTime",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['createdDate']"
+								},
+								"sink": {
+									"name": "createdDate"
+								}
+							},
+							{
+								"source": {
+									"path": "['createdTime']"
+								},
+								"sink": {
+									"name": "createdTime",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['updatedDate']"
+								},
+								"sink": {
+									"name": "updatedDate"
+								}
+							}
+						],
+						"collectionReference": "$['data']['data']",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "MDM_REST_GetBPCustomers",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_jn2",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_fileName": "@pipeline().parameters.mdm_dealers"
+						}
+					}
+				]
+			},
+			{
+				"name": "CopyToReport",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "MDM_GetBPCustomers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "/v2/mdm/getDealers?page=1&pageSize=100000"
+					},
+					{
+						"name": "Destination",
+						"value": "dms//@{pipeline().parameters.mdm_dealers}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "truncate table [ods].[MDM_Dealers];",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "customerNo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "customerNo",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "customerNameEN",
+									"type": "String"
+								},
+								"sink": {
+									"name": "customerNameEN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "address",
+									"type": "String"
+								},
+								"sink": {
+									"name": "address",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "cityName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "cityName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "customerName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "customerName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "deletionFlag",
+									"type": "String"
+								},
+								"sink": {
+									"name": "deletionFlag",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "eccBPNo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "eccBPNo",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "updatedDate",
+									"type": "String"
+								},
+								"sink": {
+									"name": "updatedDate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "createdDate",
+									"type": "String"
+								},
+								"sink": {
+									"name": "createdDate",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DestinationDataset_jn2",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_fileName": "@pipeline().parameters.mdm_dealers"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_Report_MDM_Dealers",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"mdm_dealers": {
+				"type": "string",
+				"defaultValue": "mdm_dealers"
+			}
+		},
+		"variables": {
+			"AccessToken": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-31T03:51:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

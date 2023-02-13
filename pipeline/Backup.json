@@ -1,0 +1,948 @@
+{
+	"name": "Backup",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_Backup_Crm",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.crm_tables",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Backup_Crm",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "database-backup/crm/@{item().tableName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_295",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().tableName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "backup_crm",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": "@item().tableName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "ForEach_Backup_CrmExtension",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ForEach_Backup_Crm",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.crmextension_tables",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Backup_CrmExtension",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "database-backup/crmextension/@{item().tableName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_z4t",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().tableName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "backup_crmextension",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": "@item().tableName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "ForEach_Backup_Wechat",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ForEach_Backup_CrmExtension",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.wechat_tables",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Backup_Wechat",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "database-backup/crmextension/@{item().tableName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings",
+										"copyBehavior": {
+											"value": "@item().tableName",
+											"type": "Expression"
+										}
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_5ox",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_tableName": "@item().tableName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "backup_wechat",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": "Value"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"crm_tables": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"tableName": "AccountBaseAttention"
+					},
+					{
+						"tableName": "CallDailyEmail"
+					},
+					{
+						"tableName": "CallEngineerPlan"
+					},
+					{
+						"tableName": "CallEngineerUserConfig"
+					},
+					{
+						"tableName": "CallEngineerUserConfigCity"
+					},
+					{
+						"tableName": "CallEngineerUserConfigDept"
+					},
+					{
+						"tableName": "CallItDaily"
+					},
+					{
+						"tableName": "CallMarketDaily"
+					},
+					{
+						"tableName": "CallMarketDailyRegister"
+					},
+					{
+						"tableName": "CallMarketEventType"
+					},
+					{
+						"tableName": "CallMarketUserConfig"
+					},
+					{
+						"tableName": "CallMarketUserConfigCity"
+					},
+					{
+						"tableName": "CallMarketUserConfigDept"
+					},
+					{
+						"tableName": "CallSalesApprovalInfo"
+					},
+					{
+						"tableName": "CallSalesDailyRegister"
+					},
+					{
+						"tableName": "CallSalesUserConfig"
+					},
+					{
+						"tableName": "CallSalesUserConfigCity"
+					},
+					{
+						"tableName": "CallSalesUserConfigDept"
+					},
+					{
+						"tableName": "CallStudyDealerBase"
+					},
+					{
+						"tableName": "CallStudyUserAccount"
+					},
+					{
+						"tableName": "CallStudyUserConfig"
+					},
+					{
+						"tableName": "CallStudyUserConfigCity"
+					},
+					{
+						"tableName": "CallStudyUserConfigDept"
+					},
+					{
+						"tableName": "ConfigDate"
+					},
+					{
+						"tableName": "CRM_INFO"
+					},
+					{
+						"tableName": "Customs"
+					},
+					{
+						"tableName": "CustomsExtension"
+					},
+					{
+						"tableName": "CustomsOrders"
+					},
+					{
+						"tableName": "DealerAccount"
+					},
+					{
+						"tableName": "DealerAgencyBase"
+					},
+					{
+						"tableName": "DealerAgencyNegotiation"
+					},
+					{
+						"tableName": "DealerAgencyProductLine"
+					},
+					{
+						"tableName": "DealerDaily"
+					},
+					{
+						"tableName": "DealerDiscountPolicy"
+					},
+					{
+						"tableName": "DealerDiscountPolicyAttachment"
+					},
+					{
+						"tableName": "DealerDiscountPolicyForm"
+					},
+					{
+						"tableName": "DealerDiscountPolicyFormHistory"
+					},
+					{
+						"tableName": "DealerDiscountPolicyType"
+					},
+					{
+						"tableName": "DealerModule"
+					},
+					{
+						"tableName": "DealerPackBase"
+					},
+					{
+						"tableName": "DealerProduct"
+					},
+					{
+						"tableName": "DealerRole"
+					},
+					{
+						"tableName": "DealerRoleModule"
+					},
+					{
+						"tableName": "Department"
+					},
+					{
+						"tableName": "ForcastProductInventory"
+					},
+					{
+						"tableName": "ForcastProductInventoryDealer"
+					},
+					{
+						"tableName": "ForcastProductInventoryDetail"
+					},
+					{
+						"tableName": "ForcastProductPackingList"
+					},
+					{
+						"tableName": "IncidentDispatch"
+					},
+					{
+						"tableName": "InventoryBase"
+					},
+					{
+						"tableName": "InventoryDetail"
+					},
+					{
+						"tableName": "InventoryHistory"
+					},
+					{
+						"tableName": "InventoryInvoiceProduct"
+					},
+					{
+						"tableName": "InventoryOrderDetail"
+					},
+					{
+						"tableName": "LCAcceptance"
+					},
+					{
+						"tableName": "LCInfo"
+					},
+					{
+						"tableName": "LogisticsSysUserDealer"
+					},
+					{
+						"tableName": "MarketTeacher"
+					},
+					{
+						"tableName": "OrderDetail"
+					},
+					{
+						"tableName": "OrderInfo"
+					},
+					{
+						"tableName": "ProductCategory"
+					},
+					{
+						"tableName": "ProductCategoryMap"
+					},
+					{
+						"tableName": "ProductLine"
+					},
+					{
+						"tableName": "ProductLineDetail"
+					},
+					{
+						"tableName": "RegistrationCode"
+					},
+					{
+						"tableName": "RegistrationCodeLaboman"
+					},
+					{
+						"tableName": "RegistrationCodeProductMap"
+					},
+					{
+						"tableName": "SalesCompetitor"
+					},
+					{
+						"tableName": "SalesCompetitorDealer"
+					},
+					{
+						"tableName": "SalesCompetitorInstall"
+					},
+					{
+						"tableName": "SalesCompetitorProduct"
+					},
+					{
+						"tableName": "SalesDealerProductPrice"
+					},
+					{
+						"tableName": "SalesImmuneSample"
+					},
+					{
+						"tableName": "SalesImmuneSampleDetail"
+					},
+					{
+						"tableName": "SalesIntentionAttention"
+					},
+					{
+						"tableName": "SalesIntentionComment"
+					},
+					{
+						"tableName": "SalesIntentionExtension"
+					},
+					{
+						"tableName": "SalesIntentionLog"
+					},
+					{
+						"tableName": "SalesMarketProductReport"
+					},
+					{
+						"tableName": "SalesMboData"
+					},
+					{
+						"tableName": "SalesNoReagentLog"
+					},
+					{
+						"tableName": "SalesNoReagentReturn"
+					},
+					{
+						"tableName": "SalesProduct"
+					},
+					{
+						"tableName": "SalesProductClassify"
+					},
+					{
+						"tableName": "SalesProductPrice"
+					},
+					{
+						"tableName": "SalesProductReport"
+					},
+					{
+						"tableName": "SalesReagent"
+					},
+					{
+						"tableName": "SalesSample"
+					},
+					{
+						"tableName": "SalesSysUserAccount"
+					},
+					{
+						"tableName": "SalesSysUserProduct"
+					},
+					{
+						"tableName": "SalesTask"
+					},
+					{
+						"tableName": "SecDealer"
+					},
+					{
+						"tableName": "SecDealerAccount"
+					},
+					{
+						"tableName": "SecDealerProduct"
+					},
+					{
+						"tableName": "ServiceAddressSap"
+					},
+					{
+						"tableName": "ServiceAddressSapBasic"
+					},
+					{
+						"tableName": "ServiceAddressSapCity"
+					},
+					{
+						"tableName": "ServiceAddressSapProvince"
+					},
+					{
+						"tableName": "ServiceBorrowApply"
+					},
+					{
+						"tableName": "ServiceErrorCode"
+					},
+					{
+						"tableName": "ServiceGuarantyMoneyList"
+					},
+					{
+						"tableName": "ServiceImmunePartsList"
+					},
+					{
+						"tableName": "ServiceImmuneVisit"
+					},
+					{
+						"tableName": "ServiceIncidentTimeout"
+					},
+					{
+						"tableName": "ServiceInstallationUse"
+					},
+					{
+						"tableName": "ServiceJobHopping"
+					},
+					{
+						"tableName": "ServiceM2M"
+					},
+					{
+						"tableName": "ServiceMwc"
+					},
+					{
+						"tableName": "ServiceSaleOrder"
+					},
+					{
+						"tableName": "ServiceSwcr"
+					},
+					{
+						"tableName": "ServiceSysUserAccount"
+					},
+					{
+						"tableName": "ServiceTraineeList"
+					},
+					{
+						"tableName": "ServiceTrainerTime"
+					},
+					{
+						"tableName": "ServiceTraining"
+					},
+					{
+						"tableName": "SNCS_ANALYTIC"
+					},
+					{
+						"tableName": "SNCS_ANALYTIC_ERROR"
+					},
+					{
+						"tableName": "SNCS_ERROR_CODE_NAME"
+					},
+					{
+						"tableName": "SNCS_FILE"
+					},
+					{
+						"tableName": "SNCS_MEAS"
+					},
+					{
+						"tableName": "StudyMarketIntention"
+					},
+					{
+						"tableName": "SysConfig"
+					},
+					{
+						"tableName": "SysModule"
+					},
+					{
+						"tableName": "SysRole"
+					},
+					{
+						"tableName": "SysRoleModule"
+					},
+					{
+						"tableName": "SysShortcut"
+					},
+					{
+						"tableName": "System1ToN"
+					},
+					{
+						"tableName": "SystemDealerTableColumn"
+					},
+					{
+						"tableName": "SystemDisplayTableColumn"
+					},
+					{
+						"tableName": "SystemNTo1"
+					},
+					{
+						"tableName": "SystemTable"
+					},
+					{
+						"tableName": "TradeCompany"
+					},
+					{
+						"tableName": "UserView"
+					},
+					{
+						"tableName": "UserViewTable"
+					},
+					{
+						"tableName": "UserViewTableField"
+					}
+				]
+			},
+			"crmextension_tables": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"tableName": "ActionTimes"
+					},
+					{
+						"tableName": "APDF-DEL"
+					},
+					{
+						"tableName": "dealer_engineer_station"
+					},
+					{
+						"tableName": "dealer_final_info"
+					},
+					{
+						"tableName": "device_m2m"
+					},
+					{
+						"tableName": "email"
+					},
+					{
+						"tableName": "grrboption"
+					},
+					{
+						"tableName": "headshot"
+					},
+					{
+						"tableName": "InstallationStop"
+					},
+					{
+						"tableName": "mail"
+					},
+					{
+						"tableName": "Maintenance_Task"
+					},
+					{
+						"tableName": "MTA_MeetingTags_Account"
+					},
+					{
+						"tableName": "MTA_TagsInfo"
+					},
+					{
+						"tableName": "NeoIncident"
+					},
+					{
+						"tableName": "parts"
+					},
+					{
+						"tableName": "pdfjilu"
+					},
+					{
+						"tableName": "pdfjiluDealer"
+					},
+					{
+						"tableName": "pdfStudyService"
+					},
+					{
+						"tableName": "ServerView_instrumentView"
+					},
+					{
+						"tableName": "ServerView_instrumentView_Estimate"
+					},
+					{
+						"tableName": "ServerView_instrumentViewRespones"
+					},
+					{
+						"tableName": "ServiceInstallationExtension"
+					},
+					{
+						"tableName": "ServiceInvoice"
+					},
+					{
+						"tableName": "ServiceProductInstallTimeDict"
+					},
+					{
+						"tableName": "tblclient"
+					},
+					{
+						"tableName": "tbldata"
+					},
+					{
+						"tableName": "tblDealer"
+					},
+					{
+						"tableName": "tblit"
+					},
+					{
+						"tableName": "tblpush"
+					},
+					{
+						"tableName": "DDI"
+					}
+				]
+			},
+			"wechat_tables": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"tableName": "erp_sys_dict"
+					},
+					{
+						"tableName": "erp_sys_org"
+					},
+					{
+						"tableName": "erp_sys_resource"
+					},
+					{
+						"tableName": "erp_sys_role"
+					},
+					{
+						"tableName": "erp_sys_role_resource"
+					},
+					{
+						"tableName": "erp_sys_system"
+					},
+					{
+						"tableName": "erp_sys_user"
+					},
+					{
+						"tableName": "erp_sys_user_org"
+					},
+					{
+						"tableName": "erp_sys_user_role"
+					},
+					{
+						"tableName": "fever_installation"
+					},
+					{
+						"tableName": "fun_email"
+					},
+					{
+						"tableName": "fun_email_template"
+					},
+					{
+						"tableName": "fun_jobs"
+					},
+					{
+						"tableName": "fun_payment_notify_record"
+					},
+					{
+						"tableName": "fun_payment_orderno"
+					},
+					{
+						"tableName": "fun_payment_reconciliation"
+					},
+					{
+						"tableName": "fun_payment_refunding"
+					},
+					{
+						"tableName": "fun_payment_refundorderno"
+					},
+					{
+						"tableName": "fun_push"
+					},
+					{
+						"tableName": "fun_report_info"
+					},
+					{
+						"tableName": "fun_sms"
+					},
+					{
+						"tableName": "hm_app_suggestion"
+					},
+					{
+						"tableName": "hm_app_suggestion_images"
+					},
+					{
+						"tableName": "hm_app_version"
+					},
+					{
+						"tableName": "hm_area"
+					},
+					{
+						"tableName": "hm_attachment"
+					},
+					{
+						"tableName": "hm_praise"
+					},
+					{
+						"tableName": "hm_sequence"
+					},
+					{
+						"tableName": "hm_support_process"
+					},
+					{
+						"tableName": "hm_user_attention"
+					},
+					{
+						"tableName": "hm_weixin_card_event"
+					},
+					{
+						"tableName": "hm_weixin_card_info"
+					},
+					{
+						"tableName": "hm_weixin_user_info"
+					},
+					{
+						"tableName": "openapi_user_device"
+					},
+					{
+						"tableName": "openapi_user_info"
+					},
+					{
+						"tableName": "t_accountbase"
+					},
+					{
+						"tableName": "t_callengineereventtype"
+					},
+					{
+						"tableName": "t_callmarketeventtype"
+					},
+					{
+						"tableName": "t_callsaleseventtype"
+					},
+					{
+						"tableName": "t_callstudyeventtype"
+					},
+					{
+						"tableName": "t_city"
+					},
+					{
+						"tableName": "t_contactbase"
+					},
+					{
+						"tableName": "t_customer_operate_log"
+					},
+					{
+						"tableName": "t_dealer_operate_log"
+					},
+					{
+						"tableName": "t_dealerbase"
+					},
+					{
+						"tableName": "t_dealeruser"
+					},
+					{
+						"tableName": "t_district"
+					},
+					{
+						"tableName": "t_local_contact"
+					},
+					{
+						"tableName": "t_login_permission"
+					},
+					{
+						"tableName": "t_mail_address"
+					},
+					{
+						"tableName": "t_productbase"
+					},
+					{
+						"tableName": "t_province"
+					},
+					{
+						"tableName": "t_search_record"
+					},
+					{
+						"tableName": "t_servicefca"
+					},
+					{
+						"tableName": "t_sync_log"
+					},
+					{
+						"tableName": "t_sys_role"
+					},
+					{
+						"tableName": "t_sysmex_log"
+					},
+					{
+						"tableName": "t_sysmex_log_response"
+					},
+					{
+						"tableName": "t_systempicklist"
+					},
+					{
+						"tableName": "t_sysuser"
+					},
+					{
+						"tableName": "t_weixin_customer_user"
+					},
+					{
+						"tableName": "t_weixin_dealer_user"
+					},
+					{
+						"tableName": "t_weixin_formid"
+					},
+					{
+						"tableName": "t_wx_maintenance_config_dict"
+					},
+					{
+						"tableName": "t_wx_maintenance_project_dict"
+					},
+					{
+						"tableName": "t_wx_server_dict"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-02-21T03:10:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

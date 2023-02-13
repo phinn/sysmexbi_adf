@@ -1,0 +1,1047 @@
+{
+	"name": "DMS_DDI",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_ddi",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_ddi",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "dms//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_8qo",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_8qo",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "USP_DDI_DealerInventoryBI_Day_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEach_ddi",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_DDI_DealerInventoryBI_Day_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_DDIVastecDDBatchNo",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "USP_TruncateDDIVastecDDBatchNo",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.DDIVastecDDSaleBatchNo"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT distinct historyofdaysales.bunchno,prodcode\n  FROM [ddi].[dbo].historyofdaysales\n  where (historyofdaysales.prodcode = 'AN594554' or historyofdaysales.prodcode = 'BF838022')\n  and (sellercode = N'4100001000' or sellercode = '4100002000' or sellercode = '2100009069' or sellercode = '2100009070')",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "bunchno",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "bunchno",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "prodcode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "prodcode",
+									"type": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_DDIVastecDDBatchNo",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_DDIVastecDDBatchNo",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "USP_TruncateDDIVastecDDBatchNo",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateDDIVastecDDBatchNo]"
+				},
+				"linkedServiceName": {
+					"referenceName": "WX",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_HuaxinSalesData",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "USP_TruncateDDI_HUAXINSalesData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.DDI_HUAXINSalesData"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "  select historyofdaysales.*  \r\n  FROM [ddi].[dbo].historyofdaysales\r\n  where sellercode = '4100002000'",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "historyofdaysalesid",
+									"type": "Int64",
+									"physicalType": "bigint"
+								},
+								"sink": {
+									"name": "historyofdaysalesid",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "sellerprovincename",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sellerprovincename",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sellercityname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sellercityname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sellercode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sellercode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sellername",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sellername",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalcustcode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalcustcode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalcustname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalcustname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "manufacturer",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "manufacturer",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ordercode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "ordercode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalprodcode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalprodcode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalprodname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalprodname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalspec",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalspec",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "bunchno",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "bunchno",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "serialno",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "serialno",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "oriexpirydate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "oriexpirydate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "prodcode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "prodcode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "prodname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "prodname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalqty",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 5,
+									"precision": 12
+								},
+								"sink": {
+									"name": "originalqty",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "qty",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 5,
+									"precision": 12
+								},
+								"sink": {
+									"name": "qty",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "originalprice",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalprice",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalumname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalumname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "salesdate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "salesdate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "version",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "version",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "filename",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "filename",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sdtype",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sdtype",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "businesstype",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "businesstype",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "createdate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "createdate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "chaoriid",
+									"type": "Int64",
+									"physicalType": "bigint"
+								},
+								"sink": {
+									"name": "chaoriid",
+									"type": "Int64"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_HuaxinSalesData",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_HuaxinSalesData",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "USP_TruncateDDI_HUAXINSalesData",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateDDI_HUAXINSalesData]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_DDI_HUAXINInventory",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "USP_TruncateDDI_HUAXINSalesData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.DDI_HUAXINInventory"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT *\r\n  FROM [ddi].[dbo].[historyofinventory]\r\n  where  sellercode = '4100002000'",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "invdate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "invdate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "historyofinventoryid",
+									"type": "Int64",
+									"physicalType": "bigint"
+								},
+								"sink": {
+									"name": "historyofinventoryid",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "sellerprovincename",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sellerprovincename",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sellercityname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sellercityname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sellercode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sellercode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sellername",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sellername",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "manufacturer",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "manufacturer",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "orgcodeddi",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "orgcodeddi",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "orgnameddi",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "orgnameddi",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalprodcode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalprodcode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalprodname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalprodname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalspec",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalspec",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "bunchno",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "bunchno",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "serialno",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "serialno",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "inventorytype",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "inventorytype",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "oriexpirydate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "oriexpirydate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "prodcode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "prodcode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "prodname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "prodname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalqty",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 5,
+									"precision": 12
+								},
+								"sink": {
+									"name": "originalqty",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "qty",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 5,
+									"precision": 12
+								},
+								"sink": {
+									"name": "qty",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "originalprice",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalprice",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalumname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "originalumname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "inpdate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "inpdate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "version",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "version",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "filename",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "filename",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "chaoriid",
+									"type": "Int64",
+									"physicalType": "bigint"
+								},
+								"sink": {
+									"name": "chaoriid",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "createdate",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "createdate",
+									"type": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_DDI_HUAXINInventory",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_DDI_HUAXINInventory",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "historyofdaypurchase"
+						},
+						"destination": {
+							"fileName": "dbo.historyofdaypurchase"
+						}
+					},
+					{
+						"source": {
+							"table": "historyofdaysales"
+						},
+						"destination": {
+							"fileName": "dbo.historyofdaysales"
+						}
+					},
+					{
+						"source": {
+							"table": "historyofinventory"
+						},
+						"destination": {
+							"fileName": "dbo.historyofinventory"
+						}
+					},
+					{
+						"source": {
+							"table": "historyofpurchase"
+						},
+						"destination": {
+							"fileName": "dbo.historyofpurchase"
+						}
+					},
+					{
+						"source": {
+							"table": "historyofsales"
+						},
+						"destination": {
+							"fileName": "dbo.historyofsales"
+						}
+					},
+					{
+						"source": {
+							"table": "inventory_day"
+						},
+						"destination": {
+							"fileName": "dbo.inventory_day"
+						}
+					},
+					{
+						"source": {
+							"table": "T_PRODUCT_SPECIAL_UNIT"
+						},
+						"destination": {
+							"fileName": "dbo.T_PRODUCT_SPECIAL_UNIT"
+						}
+					},
+					{
+						"source": {
+							"table": "T_ORG_SERIES_PRICE"
+						},
+						"destination": {
+							"fileName": "dbo.T_ORG_SERIES_PRICE"
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-23T06:51:28Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

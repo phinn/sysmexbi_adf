@@ -1,0 +1,19 @@
+{
+	"name": "SourceDataset_ForcastOrders",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SAP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('GetSAPForcastOrders?startDate=',getPastTime(6,'Month','yyyy'),'%2F',getPastTime(6,'Month','MM'),'%2F',getPastTime(6,'Month','dd'),'&endDate=',getPastTime(-6,'Month','yyyy'),'%2F',getPastTime(-6,'Month','MM'),'%2F',getPastTime(-6,'Month','dd'))",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

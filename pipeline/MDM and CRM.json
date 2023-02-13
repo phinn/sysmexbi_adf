@@ -1,0 +1,1181 @@
+{
+	"name": "MDM and CRM",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_CRM",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Copy_BIReport",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_crmitems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_CRM",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "crm//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_CRM",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_CRM",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "ForEach_MDM",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ForEach_CRM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_mdmitems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_MDM",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "mdm//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_MDM",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": {
+											"value": "@item().source.table",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_MDM",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": {
+											"value": "@item().destination.fileName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "USP_Cfg_Responsible_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEach_MDM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Cfg_Responsible_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_SalesDict_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Cfg_Responsible_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_SalesDict_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_AccountBase_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_SalesDict_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_AccountBase_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_DealerBase_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_AccountBase_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_DealerBase_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_Province_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_DealerBase_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_Province_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_Geography_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_Province_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_Geography_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_NewGeography_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_Geography_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_NewGeography_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_ProductGroup_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_NewGeography_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_ProductGroup_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_Product_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_ProductGroup_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_Product_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Fact_Installed_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_SysInfo_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_Installed_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Fact_ProvinceInstallTask_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Fact_Installed_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_ProvinceInstallTask_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Fact_SalesInstallTask_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Fact_ProvinceInstallTask_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_SalesInstallTask_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Fact_InstallIntention_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Fact_SalesInstallTask_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_InstallIntention_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ForEach_Backup",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Tabular Refresh",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_backupitems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_Backup",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.schema}.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "backup//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlDWSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_Backup",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_schema": {
+											"value": "@item().source.schema",
+											"type": "Expression"
+										},
+										"cw_table": {
+											"value": "@item().source.table",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_Backup",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": {
+											"value": "@item().destination.fileName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "total_judge",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEach_CRM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_total_judge_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "total_split",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "total_judge",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_total_split_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "total_rate_split",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "total_split",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_total_rate_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "measurementcounter_total_week",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "total_rate_split",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_total_week_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_Dim_UserInfo_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Fact_InstallIntention_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_UserInfo_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Tabular Refresh",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_UserInfo_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-08.chinaeast.logic.azure.cn:443/workflows/714c7e2624e7461794e53d4d1943184b/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nAGvTs5iClt0RU5LddOd-OQKZcwAvepDeATP-uzkeHI",
+					"method": "POST"
+				}
+			},
+			{
+				"name": "Copy_BIReport",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.System_UserNavAssignment"
+					},
+					{
+						"name": "Destination",
+						"value": "mdm//"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_UserNavAssignment",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_UserNavAssignment",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "USP_Dim_SysInfo_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Dim_Product_Get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_SysInfo_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"cw_crmitems": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "CSBI_AccountBase"
+						},
+						"destination": {
+							"fileName": "dboCSBI_AccountBase.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "CSBI_City"
+						},
+						"destination": {
+							"fileName": "dboCSBI_City.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "CSBI_DealerBase"
+						},
+						"destination": {
+							"fileName": "dboCSBI_DealerBase.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "CSBI_District"
+						},
+						"destination": {
+							"fileName": "dboCSBI_District.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "CSBI_ProductBase"
+						},
+						"destination": {
+							"fileName": "dboCSBI_ProductBase.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "CSBI_Province"
+						},
+						"destination": {
+							"fileName": "dboCSBI_Province.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "CSBI_ServiceInstallation"
+						},
+						"destination": {
+							"fileName": "dboCSBI_ServiceInstallation.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "SalesIntention"
+						},
+						"destination": {
+							"fileName": "dboSalesIntention.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "Salse_Dict"
+						},
+						"destination": {
+							"fileName": "dboSalse_Dict.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "View_WX_AddressBookInfo"
+						},
+						"destination": {
+							"fileName": "dboWX_AddressBookInfo.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "CSBI_SysUser"
+						},
+						"destination": {
+							"fileName": "dboCSBI_SysUser.txt"
+						}
+					}
+				]
+			},
+			"cw_mdmitems": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "Geography"
+						},
+						"destination": {
+							"fileName": "dboGeography.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "Product"
+						},
+						"destination": {
+							"fileName": "dboProduct.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "ProvinceInstallTask"
+						},
+						"destination": {
+							"fileName": "dboProvinceInstallTask.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "Responsible"
+						},
+						"destination": {
+							"fileName": "dboResponsible.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "SalesInstallTask"
+						},
+						"destination": {
+							"fileName": "dboSalesInstallTask.txt"
+						}
+					},
+					{
+						"source": {
+							"table": "SalesDict"
+						},
+						"destination": {
+							"fileName": "dboSalesDict.txt"
+						}
+					}
+				]
+			},
+			"cw_backupitems": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"schema": "crm",
+							"table": "CSBI_AccountBase"
+						},
+						"destination": {
+							"fileName": "dboCSBI_AccountBase.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "crm",
+							"table": "CSBI_City"
+						},
+						"destination": {
+							"fileName": "dboCSBI_City.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "crm",
+							"table": "CSBI_DealerBase"
+						},
+						"destination": {
+							"fileName": "dboCSBI_DealerBase.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "crm",
+							"table": "CSBI_District"
+						},
+						"destination": {
+							"fileName": "dboCSBI_District.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "crm",
+							"table": "CSBI_ProductBase"
+						},
+						"destination": {
+							"fileName": "dboCSBI_ProductBase.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "crm",
+							"table": "CSBI_Province"
+						},
+						"destination": {
+							"fileName": "dboCSBI_Province.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "crm",
+							"table": "CSBI_ServiceInstallation"
+						},
+						"destination": {
+							"fileName": "dboCSBI_ServiceInstallation.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "crm",
+							"table": "SalesIntention"
+						},
+						"destination": {
+							"fileName": "dboSalesIntention.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "crm",
+							"table": "WX_AddressBookInfo"
+						},
+						"destination": {
+							"fileName": "dboWX_AddressBookInfo.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "mdm",
+							"table": "Geography"
+						},
+						"destination": {
+							"fileName": "dboGeography.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "mdm",
+							"table": "Product"
+						},
+						"destination": {
+							"fileName": "dboProduct.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "mdm",
+							"table": "ProvinceInstallTask"
+						},
+						"destination": {
+							"fileName": "dboProvinceInstallTask.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "mdm",
+							"table": "Responsible"
+						},
+						"destination": {
+							"fileName": "dboResponsible.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "mdm",
+							"table": "SalesDict"
+						},
+						"destination": {
+							"fileName": "dboSalesDict.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "mdm",
+							"table": "SalesInstallTask"
+						},
+						"destination": {
+							"fileName": "dboSalesInstallTask.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "mdm",
+							"table": "System_UserNavAssignment"
+						},
+						"destination": {
+							"fileName": "dboSystem_UserNavAssignment.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "sncs",
+							"table": "hospital_info"
+						},
+						"destination": {
+							"fileName": "`hospital_info`.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "sncs",
+							"table": "instrument_info"
+						},
+						"destination": {
+							"fileName": "`instrument_info`.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "sncs",
+							"table": "measurementcounter"
+						},
+						"destination": {
+							"fileName": "`measurementcounter`.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "sncs",
+							"table": "measurementcounter_uf4000"
+						},
+						"destination": {
+							"fileName": "`measurementcounter_uf4000`.txt"
+						}
+					},
+					{
+						"source": {
+							"schema": "sncs",
+							"table": "measurementcounter_xn"
+						},
+						"destination": {
+							"fileName": "`measurementcounter_xn`.txt"
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-12-29T02:27:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

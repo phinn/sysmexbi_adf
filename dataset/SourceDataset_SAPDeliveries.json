@@ -1,0 +1,19 @@
+{
+	"name": "SourceDataset_SAPDeliveries",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SAP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('GetSAPDeliveries?startDate=',getPastTime(16,'Hour','yyyy'),'%2F',getPastTime(16,'Hour','MM'),'%2F',getPastTime(16,'Hour','dd'),'&endDate=',getPastTime(-8,'Hour','yyyy'),'%2F',getPastTime(-8,'Hour','MM'),'%2F',getPastTime(-8,'Hour','dd'))",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

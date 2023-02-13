@@ -1,0 +1,119 @@
+{
+	"name": "SourceDataset_DMS_DailyDeliver",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "CreateDate",
+				"type": "varchar"
+			},
+			{
+				"name": "id",
+				"type": "decimal",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "单据日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "发货日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "代理商编号",
+				"type": "varchar"
+			},
+			{
+				"name": "代理商名称",
+				"type": "varchar"
+			},
+			{
+				"name": "出发仓库",
+				"type": "varchar"
+			},
+			{
+				"name": "到货城市",
+				"type": "varchar"
+			},
+			{
+				"name": "采购订单号",
+				"type": "varchar"
+			},
+			{
+				"name": "子单号",
+				"type": "varchar"
+			},
+			{
+				"name": "出库单号",
+				"type": "varchar"
+			},
+			{
+				"name": "运单号",
+				"type": "varchar"
+			},
+			{
+				"name": "产品分类",
+				"type": "varchar"
+			},
+			{
+				"name": "合计数量",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "温度",
+				"type": "varchar"
+			},
+			{
+				"name": "详细收货人地址",
+				"type": "varchar"
+			},
+			{
+				"name": "收货人电话",
+				"type": "varchar"
+			},
+			{
+				"name": "到货日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "系统重量",
+				"type": "varchar"
+			},
+			{
+				"name": "系统体积",
+				"type": "varchar"
+			},
+			{
+				"name": "运输公司",
+				"type": "varchar"
+			},
+			{
+				"name": "审核状态",
+				"type": "varchar"
+			},
+			{
+				"name": "是否第三方",
+				"type": "varchar"
+			},
+			{
+				"name": "是否移库",
+				"type": "varchar"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

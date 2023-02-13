@@ -1,0 +1,48 @@
+{
+	"name": "SourceDataset_purchasetasknew",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Year",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Province",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Office",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Area",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Task",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "viewPurchaseTaskNew"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

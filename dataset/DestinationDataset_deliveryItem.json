@@ -1,0 +1,16 @@
+{
+	"name": "DestinationDataset_deliveryItem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Barcode",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "DeliveryNotes"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

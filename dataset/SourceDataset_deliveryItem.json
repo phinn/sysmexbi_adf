@@ -1,0 +1,70 @@
+{
+	"name": "SourceDataset_deliveryItem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "DeliveryNotes",
+				"fileSystem": "sapdata"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "VBELN",
+				"type": "UTF8"
+			},
+			{
+				"name": "MATNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PRDHA",
+				"type": "UTF8"
+			},
+			{
+				"name": "MATKL_DESC",
+				"type": "UTF8"
+			},
+			{
+				"name": "ZDESC_ZH",
+				"type": "UTF8"
+			},
+			{
+				"name": "LGORT",
+				"type": "UTF8"
+			},
+			{
+				"name": "CHARG",
+				"type": "UTF8"
+			},
+			{
+				"name": "LFIMG",
+				"type": "UTF8"
+			},
+			{
+				"name": "LGMNG",
+				"type": "UTF8"
+			},
+			{
+				"name": "VRKME",
+				"type": "UTF8"
+			},
+			{
+				"name": "WBSTA",
+				"type": "UTF8"
+			},
+			{
+				"name": "ARKTX",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

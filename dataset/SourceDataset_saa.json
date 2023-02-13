@@ -1,0 +1,155 @@
+{
+	"name": "SourceDataset_saa",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "OwnerId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StateCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "StatusCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "InvoiceId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ArriveDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "BackDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Company",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ConPhone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Consignee",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Dealer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeaPhone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InvoiceDep",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Other",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OutDatetime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Postcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RealBackDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "State",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Traffic",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Type",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "IsDeleted",
+				"type": "bit"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ModifiedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ModifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IsDealerInput",
+				"type": "bit"
+			},
+			{
+				"name": "AddressId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BudgetNo",
+				"type": "nvarchar"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,42 @@
+{
+	"name": "SourceDataset_u33",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Task",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "CRMID",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "FY20deliveryAmount",
+				"type": "float",
+				"precision": 53,
+				"scale": 0
+			},
+			{
+				"name": "FY19deliveryAmount",
+				"type": "float",
+				"precision": 53,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_CSD_MaintenancePack"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

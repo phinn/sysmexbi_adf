@@ -1,0 +1,52 @@
+{
+	"name": "SourceDataset_View_LabomanInstallation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "OS",
+				"type": "varchar"
+			},
+			{
+				"name": "User",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SN",
+				"type": "varchar"
+			},
+			{
+				"name": "Tel",
+				"type": "varchar"
+			},
+			{
+				"name": "Software",
+				"type": "varchar"
+			},
+			{
+				"name": "Ver",
+				"type": "varchar"
+			},
+			{
+				"name": "CreateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_LabomanInstallation"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

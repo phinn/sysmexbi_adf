@@ -1,0 +1,118 @@
+{
+	"name": "sncsreagent_Temp",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_sncsreagent_copy1",
+				"description": "整合数仓CRM信息，排除已经标记为非原装的",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.SNCSReagent"
+					},
+					{
+						"name": "Destination",
+						"value": "wxm//Sncsreagent"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "hospital_name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "hospital_name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "instrument_type",
+									"type": "String"
+								},
+								"sink": {
+									"name": "instrument_type",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "time_stamp",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "time_stamp",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "instrument_serials",
+									"type": "String"
+								},
+								"sink": {
+									"name": "instrument_serials",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "lot_num",
+									"type": "String"
+								},
+								"sink": {
+									"name": "lot_num",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_Sncsreagent1_Test",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_Sncsreagent1_Test",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-11-07T03:46:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

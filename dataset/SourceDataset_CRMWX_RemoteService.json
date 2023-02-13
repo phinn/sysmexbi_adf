@@ -1,0 +1,69 @@
+{
+	"name": "SourceDataset_CRMWX_RemoteService",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "ServiceId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LB_AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ConName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Contact",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Installation",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Phone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Problem",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Product",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LB_ProductType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LB_SerialNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RepairEndTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ServiceType",
+				"type": "smallint",
+				"precision": 5
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,66 @@
+{
+	"name": "SourceDataset_RiskControl",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "field0009",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "field0052",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "field0057",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "field0007",
+				"type": "numeric",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "field0001",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "field0079",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "field0083",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "field0104",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_RiskControl"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,16 @@
+{
+	"name": "SCMS_bp1dj43y4dz40z190",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=rm-bp1dj43y4dz40z190.sqlserver.rds.aliyuncs.com,3433;initial catalog=sysmex_09;user id=schsms",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlYzNiNzk0My0zMzE1LTRiYzYtOWI0ZC00YTI5NTIyMzFlNGEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfhosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

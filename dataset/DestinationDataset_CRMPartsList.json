@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_CRMPartsList",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "FittingCRMPartsList"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

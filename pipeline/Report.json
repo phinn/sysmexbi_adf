@@ -1,0 +1,43 @@
+{
+	"name": "Report",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute OA",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "OA",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute SAP",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute OA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SAP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2020-10-12T01:56:58Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

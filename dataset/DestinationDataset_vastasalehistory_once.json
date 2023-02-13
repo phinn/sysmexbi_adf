@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_vastasalehistory_once",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ddi_vastasaleshistory"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,368 @@
+{
+	"name": "SourceDataset_ProductCode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "decimal",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "CREATE_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IS_CLIENT",
+				"type": "char"
+			},
+			{
+				"name": "TRI_DEALER_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "CREATOR",
+				"type": "varchar"
+			},
+			{
+				"name": "IS_DELETED",
+				"type": "char"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "lock_version",
+				"type": "decimal",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "MODIFY_USER",
+				"type": "varchar"
+			},
+			{
+				"name": "ADD_BARCODE",
+				"type": "varchar"
+			},
+			{
+				"name": "ADVICE_PRICE",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "BARCODE",
+				"type": "varchar"
+			},
+			{
+				"name": "BASIC_PRICE",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "BRAND",
+				"type": "varchar"
+			},
+			{
+				"name": "CARTON_BARCODE",
+				"type": "varchar"
+			},
+			{
+				"name": "CATEGORY_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "CATEGORY_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "FIRST_DELIVERY_DAY",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "GROSS_WEIGHT",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "HEIGHT",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "IS_BATCH",
+				"type": "char"
+			},
+			{
+				"name": "IS_DISPATCH",
+				"type": "char"
+			},
+			{
+				"name": "IS_ENABLED",
+				"type": "char"
+			},
+			{
+				"name": "IS_NEW",
+				"type": "char"
+			},
+			{
+				"name": "IS_PROMOTION",
+				"type": "char"
+			},
+			{
+				"name": "IS_SELLING",
+				"type": "char"
+			},
+			{
+				"name": "LEAST_ORDER_MULTIPLE",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LENGTH",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "MARK_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "MAX_QTY",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "MEMO",
+				"type": "varchar"
+			},
+			{
+				"name": "MIN_QTY",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "NAME_EN",
+				"type": "varchar"
+			},
+			{
+				"name": "NET_WEIGHT",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "OLDCODE",
+				"type": "varchar"
+			},
+			{
+				"name": "ORIGIN",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCT_GROUP_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCTLINE_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCTLINE_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCTLINE_TWOCODE",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCTLINE_TWONAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SAFE_TIME",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SALES_END_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "SALES_START_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "SHORT_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SMALL_HEIGHT",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "SMALL_LENGTH",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "SMALL_SPEC_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "SMALL_SPEC_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SMALL_UNIT_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "SMALL_UNIT_TITLE",
+				"type": "varchar"
+			},
+			{
+				"name": "SMALL_WIDTH",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "SPEC_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "SPEC_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "STOP_DAY",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "TRANSLATE_RADIO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "UNIT_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "UNIT_TITLE",
+				"type": "varchar"
+			},
+			{
+				"name": "VERSION",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "VOLUME",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "WEIGHT_UNIT",
+				"type": "varchar"
+			},
+			{
+				"name": "WIDTH",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "PRODUCT_GROUP_ID",
+				"type": "decimal",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "PRODUCTLINE_ID",
+				"type": "decimal",
+				"precision": 19,
+				"scale": 0
+			},
+			{
+				"name": "IF_BOM",
+				"type": "varchar"
+			},
+			{
+				"name": "TEMPERATURE",
+				"type": "varchar"
+			},
+			{
+				"name": "IS_DANGEROUS",
+				"type": "varchar"
+			},
+			{
+				"name": "IF_DATA_MASTER",
+				"type": "varchar"
+			},
+			{
+				"name": "PLAN_DELIVERY_DAYS",
+				"type": "varchar"
+			},
+			{
+				"name": "CURRENCY",
+				"type": "varchar"
+			},
+			{
+				"name": "KONDM",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODH",
+				"type": "varchar"
+			},
+			{
+				"name": "ZMANA",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "T_ORG_PRODUCT"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

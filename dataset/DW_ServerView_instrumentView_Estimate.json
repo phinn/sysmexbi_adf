@@ -1,0 +1,132 @@
+{
+	"name": "DW_ServerView_instrumentView_Estimate",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "UserName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallationName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductLine",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProvinceName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountGrade",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallDay",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "SampleNum",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "SncsAvgActionTimes",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "SncsActionTimes",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "SncsOverThresholdTimes",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "AlarmTop20OneYear",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "NoBreakdownAvgHoursOneYear",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "NoBreakdownHoursThisYear",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "AvgRepairTimeLast3Times",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "AvgRepairTimeLastYear",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "MaintainDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "RepairDate",
+				"type": "date"
+			},
+			{
+				"name": "SysUserId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "InstallationId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "AccountId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "createtime",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServerView_instrumentView_Estimate"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

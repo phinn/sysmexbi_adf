@@ -1,0 +1,76 @@
+{
+	"name": "SourceDataset_FittingBarcode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Barcode",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "barcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "good_code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "good_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "good_kind",
+				"type": "nvarchar"
+			},
+			{
+				"name": "factory",
+				"type": "nvarchar"
+			},
+			{
+				"name": "kuwei",
+				"type": "nvarchar"
+			},
+			{
+				"name": "unit",
+				"type": "nvarchar"
+			},
+			{
+				"name": "in_number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "in_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "barcode_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "isout",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "sap_number",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_AccessoriesBarcode"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

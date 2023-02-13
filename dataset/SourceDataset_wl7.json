@@ -1,0 +1,116 @@
+{
+	"name": "SourceDataset_wl7",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_DDI",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "DEALER_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "DEALER_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "INVENTORY_DATE",
+				"type": "varchar"
+			},
+			{
+				"name": "DEALER_PRODUCT_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCT_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCT_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SPEC",
+				"type": "varchar"
+			},
+			{
+				"name": "SERIAL_NO",
+				"type": "varchar"
+			},
+			{
+				"name": "UNIT",
+				"type": "varchar"
+			},
+			{
+				"name": "SALE_QTY",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "QTY",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 5
+			},
+			{
+				"name": "CATEGORY_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCTLINE_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "manufacturer",
+				"type": "varchar"
+			},
+			{
+				"name": "orgnameddi",
+				"type": "varchar"
+			},
+			{
+				"name": "INV_MONTH",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "PURCHASE_PRICE",
+				"type": "decimal",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "PURCHASER_AMOUNT",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "HSDAT",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "report_date",
+				"type": "varchar"
+			},
+			{
+				"name": "create_time",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "view_inventory_amount_now_copy"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

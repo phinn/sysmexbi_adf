@@ -1,0 +1,125 @@
+{
+	"name": "SourceDataset_37p",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "ServiceId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ServiceNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProvinceName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CityName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DistrictName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerAddress",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerUserId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerUserName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallationName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallationCODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ServiceType",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "ServiceTypeName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Contact",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContactName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsDirectService",
+				"type": "bit"
+			},
+			{
+				"name": "RepairDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "RepairEndTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "RepairStartTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "createdtime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "view_OA_ServiceServiceBy6Month"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

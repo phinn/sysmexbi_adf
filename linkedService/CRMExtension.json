@@ -1,0 +1,17 @@
+{
+	"name": "CRMExtension",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "CRM扩展数据库",
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=172.23.128.75;initial catalog=CRMExtension;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzYmM4MjgzMC00MzFjLTQwYWItYTQyMy00Mjk3Y2M2YzQ2ZTQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfhosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

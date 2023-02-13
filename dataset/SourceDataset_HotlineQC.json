@@ -1,0 +1,140 @@
+{
+	"name": "SourceDataset_HotlineQC",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "流水号",
+				"type": "nvarchar"
+			},
+			{
+				"name": "状态",
+				"type": "varchar"
+			},
+			{
+				"name": "发起日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "发起人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "质检_上传附件",
+				"type": "nvarchar"
+			},
+			{
+				"name": "坐席_上传附件",
+				"type": "nvarchar"
+			},
+			{
+				"name": "坐席姓名",
+				"type": "nvarchar"
+			},
+			{
+				"name": "流程_话务质检窗口人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "流程_话务坐席",
+				"type": "nvarchar"
+			},
+			{
+				"name": "流程_热线经理",
+				"type": "nvarchar"
+			},
+			{
+				"name": "坐席工号",
+				"type": "nvarchar"
+			},
+			{
+				"name": "选部门1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "流程_发起日期",
+				"type": "nvarchar"
+			},
+			{
+				"name": "流程_发起人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "质检日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "field0057",
+				"type": "nvarchar"
+			},
+			{
+				"name": "话务日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "通话标识",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CRM单号",
+				"type": "nvarchar"
+			},
+			{
+				"name": "问题分类",
+				"type": "nvarchar"
+			},
+			{
+				"name": "问题严重度",
+				"type": "nvarchar"
+			},
+			{
+				"name": "话务方向",
+				"type": "nvarchar"
+			},
+			{
+				"name": "问题严重度终判",
+				"type": "nvarchar"
+			},
+			{
+				"name": "文本域1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "质检窗口_问题点",
+				"type": "nvarchar"
+			},
+			{
+				"name": "坐席_改进总结",
+				"type": "nvarchar"
+			},
+			{
+				"name": "申诉理由",
+				"type": "nvarchar"
+			},
+			{
+				"name": "最终改进建议",
+				"type": "nvarchar"
+			},
+			{
+				"name": "质检窗口_改进建议",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_CS_热线质检"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,25 @@
+{
+	"name": "SourceDataset_NewSAPGoodsReceipt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SAP_New",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "/v1/sap/s4/edi/GoodsReceipt",
+			"requestMethod": "POST",
+			"additionalHeaders": {
+				"env": "Production",
+				"accessToken": {
+					"value": "2c4c2ee8-94ab-4317-b283-2d4dc884c60e",
+					"type": "Expression"
+				},
+				"content-type": "application/json"
+			},
+			"requestBody": "{\n  \"Request\": {\n    \"CPUDT_B\": \"20221108\",\n    \"CPUDT_E\": \"20221108\",\n    \"CPUTM_B\": \"000000\",\n    \"CPUTM_E\": \"235959\",\n    \"MoveTyData\":[\n    {\n    \"BWART\":\"101\"\n    },\n    {\n    \"BWART\":\"311\"\n    },\n    {\n    \"BWART\":\"641\"\n    }\n    ],\n    \"YMaNoData\": [\n      {\n        \"MJAHR\": \"2022\"\n      }\n    ],\n    \"ZPRICE_INDICATOR\": \"\"\n    }\n}"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

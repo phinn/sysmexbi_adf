@@ -1,0 +1,66 @@
+{
+	"name": "TEMP_NewSAPDeliveryToBarcode",
+	"properties": {
+		"activities": [
+			{
+				"name": "deliveryTest",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:03:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "POST",
+						"requestBody": {
+							"value": "@concat('{\n    \"startDate\": \"',getPastTime(16,'Hour','yyyy'),getPastTime(16,'Hour','MM'),getPastTime(16,'Hour','dd'),'\",\n    \"endDate\": \"',getPastTime(16,'Hour','yyyy'),getPastTime(16,'Hour','MM'),getPastTime(16,'Hour','dd'),'\",\n}')",
+							"type": "Expression"
+						},
+						"additionalHeaders": {
+							"env": "Production",
+							"accessToken": "2c4c2ee8-94ab-4317-b283-2d4dc884c60e",
+							"content-type": "application/json"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_Copy_NewSAPDelevery",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_sapdeliveryItemData_copy1",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-12-20T09:36:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

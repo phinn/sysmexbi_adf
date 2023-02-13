@@ -1,0 +1,2772 @@
+{
+	"name": "WX",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_DailyVisittrend",
+				"description": "每日回访",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.DailyVisittrend"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.DailyVisittrend"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "ID",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "System",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "System",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VisitPv",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 18
+								},
+								"sink": {
+									"name": "VisitPv",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 18
+								}
+							},
+							{
+								"source": {
+									"name": "VisitUv",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 18
+								},
+								"sink": {
+									"name": "VisitUv",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 18
+								}
+							},
+							{
+								"source": {
+									"name": "ReportDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "ReportDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_DailyVisittrend",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_DailyVisittrend",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateDailyVisittrend]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ForEach_a5c",
+				"description": "IT需求变更单等系统单据",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_a5c",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "dbo.@{item().destination.table}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"tableOption": "autoCreate"
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false,
+								"translator": {
+									"value": "@item().copyActivity.translator",
+									"type": "Expression"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_a5c",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_a5c",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().destination.table"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Stored procedure2",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateITProject]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_LabomanInstallation",
+				"description": "U盘使用情况",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.View_LabomanInstallation"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.LabomanInstallation"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "Id",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "OS",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "OS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "User",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "User",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SN",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "SN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Tel",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Tel",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Software",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Software",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Ver",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Ver",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateTime",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "CreateTime",
+									"type": "DateTime"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_LabomanInstallation",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_LabomanInstallation",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_SystemManager",
+				"description": "系统负责人表",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.View_SystemManager"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.SystemManager"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "System",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "System",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Person",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Person",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ParentPerson",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ParentPerson",
+									"type": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_SystemManager",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_SystemManager",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "USP_Dim_IT_Requirement",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEach_a5c",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Dim_IT_Requirement_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_WXSuspiciousReagentResult",
+				"description": "试剂排查结果表 WX-DW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.ViewSuspiciousReagentResult"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.WX_SuspiciousReagentResult"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						},
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "DataLake",
+							"type": "LinkedServiceReference"
+						},
+						"path": "wxm"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "AccountName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AccountName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateTime",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CreateTime",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "employee_no",
+									"type": "String"
+								},
+								"sink": {
+									"name": "employee_no",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BenBu",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BenBu",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CheckResult",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CheckResult",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SuspiciousType",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SuspiciousType",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountId",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "AccountId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CheckByName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CheckByName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CheckTime",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CheckTime",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "IsBack",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "IsBack",
+									"type": "Boolean"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_WXSuspiciousReagentResult",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_WXSuspiciousReagentResult",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Stored procedure3",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateWXSuspiciousReagentResult]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Stored procedure4",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy_WXSuspiciousReagentResult",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_UPDATE_WX_SuspiciousReagentResult]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy_WX_sysmexengineeronduty",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Destination",
+						"value": "dbo.WX_sysmexengineeronduty"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "MySqlSource",
+						"query": "select * from viewsysmexengineeronduty"
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						},
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "DataLake",
+							"type": "LinkedServiceReference"
+						},
+						"path": "wxm"
+					},
+					"enableSkipIncompatibleRow": false,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "DataLake",
+								"type": "LinkedServiceReference"
+							},
+							"path": "wxm"
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "id",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "EmpNo",
+									"type": "String"
+								},
+								"sink": {
+									"name": "EmpNo",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Mobile",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Mobile",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OnDutyDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "OnDutyDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Role",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Role",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OpenID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "OpenID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Avatar",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Avatar",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EmpType",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "EmpType",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Skill",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Skill",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EmpRole",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "EmpRole",
+									"type": "Int32"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_sysmexengineeronduty2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_sysmexengineeronduty2",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Stored procedure-WX_CallVisit",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_TruncateWX_CallVisit]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Report",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ForEach_u61",
+				"description": "语音回访",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure-WX_CallVisit",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items2",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_u61",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "dbo.@{item().destination.table}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink"
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false,
+								"translator": {
+									"value": "@item().copyActivity.translator",
+									"type": "Expression"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_u61",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_u61",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().destination.table"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Copy_ServiceGrade",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.ServiceGrade"
+					},
+					{
+						"name": "Destination",
+						"value": "wxm//dbo.ServiceGrade"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_ServiceGrade",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_ServiceGrade",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "View_Project"
+						},
+						"destination": {
+							"table": "IT_Project"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "项目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "项目经理",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目经理",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "更新时间",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "更新时间",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "项目类型",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目类型",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "项目大类",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目大类",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_ProjectManagerWeekReport"
+						},
+						"destination": {
+							"table": "IT_ProjectManagerWeekReport"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "项目名称",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目名称",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "年",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "年",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "月",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "月",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "周",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "周",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "内容",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "内容",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "序号",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "序号",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "项目经理",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目经理",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "更新时间",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "更新时间",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "项目类型",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目类型",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "项目大类",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "项目大类",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProjectName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProjectName",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "view_Requirement"
+						},
+						"destination": {
+							"table": "IT_Requirement"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "state",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "state",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "finishedflag",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "finishedflag",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ApplicationDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "ApplicationDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "MainSubject",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "MainSubject",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Content",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Content",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangeSystem",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangeSystem",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Influence",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Influence",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RiskAnalysis",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "RiskAnalysis",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PlannedDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "PlannedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "WorkDays",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "WorkDays",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "WorkDayType",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "WorkDayType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangePlan",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangePlan",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EquipmentMonitoring",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "EquipmentMonitoring",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MonitoringPlan",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "MonitoringPlan",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FallbackPlan",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "FallbackPlan",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EstimateDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "EstimateDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ApplicationDepartment",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ApplicationDepartment",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Applicant",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Applicant",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ApplicationManager",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ApplicationManager",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangeType",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangeType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangeSource",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangeSource",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangeClassify",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangeClassify",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CurrentUser",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CurrentUser",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "view_RequirementTransfers"
+						},
+						"destination": {
+							"table": "IT_RequirementTransfers"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 19
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "state",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "state",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "finishedflag",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "finishedflag",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "OAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "OAID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ApplicationDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "ApplicationDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "MainSubject",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "MainSubject",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Content",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Content",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PlannedDate",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "PlannedDate",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangePlan",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangePlan",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DoRecord",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "DoRecord",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ReasonsForFailure",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ReasonsForFailure",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FallbackPlan",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "FallbackPlan",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DoDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "DoDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "TransferNumber",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "TransferNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ApplicationDepartment",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ApplicationDepartment",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Applicant",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Applicant",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TestUser",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "TestUser",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TransferUser",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "TransferUser",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangeType",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangeType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangeWay",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangeWay",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DoResult",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "DoResult",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CurrentUser",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CurrentUser",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChangeOAID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ChangeOAID",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_ProjectPlan"
+						},
+						"destination": {
+							"table": "IT_ProjectPlan"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ProjectNo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProjectNo",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProjectName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProjectName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Content",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Content",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PlanStart",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "PlanStart",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "PlanEnd",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "PlanEnd",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ActualStart",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "ActualStart",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ActualEnd",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "ActualEnd",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "Remark",
+											"type": "String",
+											"physicalType": "ntext"
+										},
+										"sink": {
+											"name": "Remark",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProjectManager",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProjectManager",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProjectState",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProjectState",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "View_ProjectPlanDetail"
+						},
+						"destination": {
+							"table": "IT_ProjectPlanDetail"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Sort",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 20
+										},
+										"sink": {
+											"name": "Sort",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "WorkContent",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "WorkContent",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PlanStart",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "PlanStart",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "PlanEnd",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "PlanEnd",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ActualStart",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "ActualStart",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ActualEnd",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "ActualEnd",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ProjectNo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProjectNo",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					}
+				]
+			},
+			"cw_items2": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "CallVisit_ServiceCustomer"
+						},
+						"destination": {
+							"table": "WX_CallVisit_ServiceCustomer"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										},
+										"sink": {
+											"name": "Id",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										}
+									},
+									{
+										"source": {
+											"name": "Number",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Number",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Province",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Province",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "City",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "City",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "AccountId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										},
+										"sink": {
+											"name": "AccountId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										}
+									},
+									{
+										"source": {
+											"name": "AccountName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "AccountName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ContactName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ContactName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ContactPhone",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "ContactPhone",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ContactId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										},
+										"sink": {
+											"name": "ContactId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										}
+									},
+									{
+										"source": {
+											"name": "Suscribe",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Suscribe",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "UserType",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "UserType",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CreateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "CreateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "IsSend",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "IsSend",
+											"type": "Boolean",
+											"physicalType": "bit"
+										}
+									},
+									{
+										"source": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ErrorMsg",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ErrorMsg",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SendTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "SendTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionUse",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "QuestionUse",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore1",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore1",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore2",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore2",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore3",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore3",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore4",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore4",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Remark",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Remark",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Evaluate",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Evaluate",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "EvaluateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "EvaluateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "InstallerID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "InstallerID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "CallVisit_ServiceInstallation"
+						},
+						"destination": {
+							"table": "WX_CallVisit_ServiceInstallation"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										},
+										"sink": {
+											"name": "Id",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										}
+									},
+									{
+										"source": {
+											"name": "CallVisitId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										},
+										"sink": {
+											"name": "CallVisitId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										}
+									},
+									{
+										"source": {
+											"name": "VisitName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "VisitName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "InstallationId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										},
+										"sink": {
+											"name": "InstallationId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										}
+									},
+									{
+										"source": {
+											"name": "InstallationName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "InstallationName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "InstallDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "InstallDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "AccountId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										},
+										"sink": {
+											"name": "AccountId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										}
+									},
+									{
+										"source": {
+											"name": "ContactId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										},
+										"sink": {
+											"name": "ContactId",
+											"type": "Guid",
+											"physicalType": "uniqueidentifier"
+										}
+									},
+									{
+										"source": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CreateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "CreateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ErrorMsg",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ErrorMsg",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SendTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "SendTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionUse",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "QuestionUse",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore1",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore1",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore2",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore2",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore3",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore3",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore4",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore4",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore5",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore5",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore6",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore6",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionScore7",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "QuestionScore7",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Remark",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Remark",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Evaluate",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Evaluate",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "EvaluateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "EvaluateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-10-09T05:49:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

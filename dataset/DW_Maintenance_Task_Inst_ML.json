@@ -1,0 +1,58 @@
+{
+	"name": "DW_Maintenance_Task_Inst_ML",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "dbo.Maintenance_Task_Inst_ML",
+				"fileSystem": "crmextension"
+			},
+			"compressionCodec": "gzip"
+		},
+		"schema": [
+			{
+				"name": "tagsId",
+				"type": "UTF8"
+			},
+			{
+				"name": "tagsName",
+				"type": "UTF8"
+			},
+			{
+				"name": "reasons",
+				"type": "UTF8"
+			},
+			{
+				"name": "IsDeleted",
+				"type": "UTF8"
+			},
+			{
+				"name": "Status",
+				"type": "UTF8"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "UTF8"
+			},
+			{
+				"name": "CreatedOn",
+				"type": "INT96"
+			},
+			{
+				"name": "ModifiedBy",
+				"type": "UTF8"
+			},
+			{
+				"name": "ModifiedOn",
+				"type": "INT96"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

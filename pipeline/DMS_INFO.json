@@ -1,0 +1,138 @@
+{
+	"name": "DMS_INFO",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_jn2",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_jn2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "dms//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings",
+										"maxConcurrentConnections": 0,
+										"blockSizeInMB": 10
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_jn2",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_jn2",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "T_BI_PRODUCT"
+						},
+						"destination": {
+							"fileName": "dboT_BI_PRODUCT"
+						}
+					},
+					{
+						"source": {
+							"table": "T_ORG_DELIVER"
+						},
+						"destination": {
+							"fileName": "dboT_ORG_DELIVER"
+						}
+					},
+					{
+						"source": {
+							"table": "T_ORG_DELIVER_ITEM"
+						},
+						"destination": {
+							"fileName": "dboT_ORG_DELIVER_ITEM"
+						}
+					},
+					{
+						"source": {
+							"table": "T_ORG_PRODUCT"
+						},
+						"destination": {
+							"fileName": "dboT_ORG_PRODUCT"
+						}
+					},
+					{
+						"source": {
+							"table": "T_FO_FORECAST"
+						},
+						"destination": {
+							"fileName": "dboT_FO_FORECAST"
+						}
+					},
+					{
+						"source": {
+							"table": "T_FO_FORECAST_ORDER_ITEM"
+						},
+						"destination": {
+							"fileName": "dboT_FO_FORECAST_ORDER_ITEM"
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-05-10T09:03:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

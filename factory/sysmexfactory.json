@@ -1,0 +1,9 @@
+{
+	"name": "sysmexfactory",
+	"location": "chinaeast2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "80d0318c-e6ed-402e-bc73-6d1f24d9cac1",
+		"tenantId": "ae95c786-ff4d-4930-900e-ce61c30db855"
+	}
+}

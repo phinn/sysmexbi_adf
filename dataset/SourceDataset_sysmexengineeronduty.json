@@ -1,0 +1,13 @@
+{
+	"name": "SourceDataset_sysmexengineeronduty",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AISound",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

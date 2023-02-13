@@ -1,0 +1,200 @@
+{
+	"name": "CRMExtension_Maintenance_Task_Inst_ML",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRMExtension",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "InstallationId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "InstallationName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "dealerId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "DealerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SignDealer",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "SignDealerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContactInstall",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "InstallEngineerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountEngineerId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "AccountEngineerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProvinceId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "ProvinceName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CityId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "CityName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DistrictId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "DistricName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "ProductName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductCategory1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductCategory2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductCategory3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Sort",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "startDate",
+				"type": "date"
+			},
+			{
+				"name": "endDate",
+				"type": "date"
+			},
+			{
+				"name": "XJ",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "isDelete",
+				"type": "varchar"
+			},
+			{
+				"name": "qrcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SampleNum",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UseReagent",
+				"type": "bit"
+			},
+			{
+				"name": "IsDirectService",
+				"type": "bit"
+			},
+			{
+				"name": "ProductGroup",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DirectServiceType",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DirectServiceTypeDatas",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsReplace",
+				"type": "bit"
+			},
+			{
+				"name": "InsDel",
+				"type": "bit"
+			},
+			{
+				"name": "StateCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "StatusCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ModifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_Wechat_Maintenance_Task_Inst_ML"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "SourceDataset_HotlineQCStatistics",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_CS_质检统计"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

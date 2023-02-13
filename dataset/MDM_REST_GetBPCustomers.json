@@ -1,0 +1,16 @@
+{
+	"name": "MDM_REST_GetBPCustomers",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "APIGW8083",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "/v2/mdm/getDealers?page=1&pageSize=100000"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

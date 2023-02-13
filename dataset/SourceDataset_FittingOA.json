@@ -1,0 +1,86 @@
+{
+	"name": "SourceDataset_FittingOA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "field0001",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SAPNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SAPName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Count",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "UserName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JobNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ApplicationDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "AccountingNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Province",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GetType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SAPType1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SAPType2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Phone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Hospital",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_CSD_ColletDetail"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,34 @@
+{
+	"name": "SourceDataset_OA_CSDCHUNKOU",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "省份",
+				"type": "nvarchar"
+			},
+			{
+				"name": "客服主管",
+				"type": "nvarchar"
+			},
+			{
+				"name": "客服经理",
+				"type": "nvarchar"
+			},
+			{
+				"name": "老市场办事处",
+				"type": "nvarchar"
+			},
+			{
+				"name": "新市场办事处",
+				"type": "nvarchar"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

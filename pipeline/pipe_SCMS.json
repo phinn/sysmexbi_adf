@@ -1,0 +1,140 @@
+{
+	"name": "pipe_SCMS",
+	"properties": {
+		"description": "rm-bp1dj43y4dz40z190",
+		"activities": [
+			{
+				"name": "DMS_to_SCMS",
+				"description": "DMS抽取数据到SCMS",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "TRUNCATE_TABLES",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.SQL_To_SCMS",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "COPY_DMS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "dbo.@{item().tableName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource",
+									"query": {
+										"value": "@item().source",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DMS_Tables",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": "@item().tableName",
+										"source": "@item().source"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SCMS_Tables",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item().tableName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "TRUNCATE_TABLES",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[TRUNCATE_TABLES]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SCMS_bp1dj43y4dz40z190",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"SQL_To_SCMS": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": "SELECT A.dealer_code AS CODE, A.dealer_name AS NAME, A.is_enabled AS IS_DELETED, B.contact AS CONTACT_PERSON, B.address AS STREET_ADDR, B.phone AS PHONE, A.create_time AS CREATE_DATE FROM t_dealer A LEFT JOIN t_dealer_address B ON A.dealer_code = B.dealer_code",
+						"tableName": "t_bi_dealer"
+					},
+					{
+						"source": "SELECT id AS id, so_num AS SO_NUM, contract_number AS CONTRACT_NUMBER, dealer_code AS DEALER_CODE, document_date AS DOCUMENT_DATE, document_num AS DOCUMENT_NUM, order_status AS STATUS,0 AS BILLTO_ID, 0 AS DEALER_ID, '0' AS SUPPLIER_CODE, 0 AS SUPPLIER_ID, create_time AS CREATE_DATE FROM t_purchase_order WHERE io_status <> 'X' ",
+						"tableName": "T_PO_PURCHASE_ORDER"
+					},
+					{
+						"source": "SELECT TI.id AS id, TI.product_code AS PRODUCT_CODE, TI.product_name AS PRODUCT_NAME, TI.qty AS ORDERED_QTY, CASE T.is_export WHEN 'F' THEN '4220' WHEN 'T' THEN '4210' END AS PLANT, TI.order_id AS PURCHASEORDER_ID, TI.sap_line_num AS SAP_LINE_NUM, TI.is_bom AS BOMSN, 0 AS PRODUCT_ID, IFNULL( TI.parent_product_code, '') AS DESCRIPTION FROM t_purchase_order_item TI LEFT JOIN t_purchase_order T ON TI.order_id = T.id",
+						"tableName": "T_PO_PURCHASE_ORDER_ITEM"
+					},
+					{
+						"source": "SELECT document_num AS DOCUMENT_NUM, id AS id, document_date AS DOCUMENT_DATE, dealer_code AS DEALER_CODE, delivery_num AS DELIVERY_NUM, document_no AS DOCUMENT_NO, '0' AS OUT_TYPE, '0' AS SUPPLIER_CODE, '0' AS SUPPLIER_NAME, '0' AS DEALER_ID, create_time AS CREATE_DATE FROM t_delivery_order",
+						"tableName": "T_ORG_DELIVER"
+					},
+					{
+						"source": "SELECT id AS id, so_num AS SO_NUM, so_line_num AS SO_LINE_NUM, line_num AS LINE_NUM, product_code AS PRODUCT_CODE, product_name AS PRODUCT_NAME, shipped_qty AS SHIPPED_QTY, delivery_id AS DELIVER_ID, location_code AS LOCATION_CODE, location_name AS LOCATION_NAME, uom AS UOM, create_time AS CREATE_DATE FROM t_delivery_order_item",
+						"tableName": "T_ORG_DELIVER_ITEM"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-12-07T09:19:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

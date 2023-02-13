@@ -1,0 +1,128 @@
+{
+	"name": "SourceDataset_DDI_HUAXINInventory",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_DDI",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "invdate",
+				"type": "varchar"
+			},
+			{
+				"name": "historyofinventoryid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "sellerprovincename",
+				"type": "varchar"
+			},
+			{
+				"name": "sellercityname",
+				"type": "varchar"
+			},
+			{
+				"name": "sellercode",
+				"type": "varchar"
+			},
+			{
+				"name": "sellername",
+				"type": "varchar"
+			},
+			{
+				"name": "manufacturer",
+				"type": "varchar"
+			},
+			{
+				"name": "orgcodeddi",
+				"type": "varchar"
+			},
+			{
+				"name": "orgnameddi",
+				"type": "varchar"
+			},
+			{
+				"name": "originalprodcode",
+				"type": "varchar"
+			},
+			{
+				"name": "originalprodname",
+				"type": "varchar"
+			},
+			{
+				"name": "originalspec",
+				"type": "varchar"
+			},
+			{
+				"name": "bunchno",
+				"type": "varchar"
+			},
+			{
+				"name": "serialno",
+				"type": "varchar"
+			},
+			{
+				"name": "inventorytype",
+				"type": "varchar"
+			},
+			{
+				"name": "oriexpirydate",
+				"type": "varchar"
+			},
+			{
+				"name": "prodcode",
+				"type": "varchar"
+			},
+			{
+				"name": "prodname",
+				"type": "varchar"
+			},
+			{
+				"name": "originalqty",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 5
+			},
+			{
+				"name": "qty",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 5
+			},
+			{
+				"name": "originalprice",
+				"type": "varchar"
+			},
+			{
+				"name": "originalumname",
+				"type": "varchar"
+			},
+			{
+				"name": "inpdate",
+				"type": "varchar"
+			},
+			{
+				"name": "version",
+				"type": "varchar"
+			},
+			{
+				"name": "filename",
+				"type": "varchar"
+			},
+			{
+				"name": "chaoriid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "createdate",
+				"type": "varchar"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

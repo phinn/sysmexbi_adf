@@ -1,0 +1,674 @@
+{
+	"name": "SNCS_INFO",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_SNCS_1",
+				"description": "1.errorreport\n2.eventhistory\n3.eventreagent",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ForEach_SNCS_4",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.sncs_items_1",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_SNCS_INFO_1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "sncs//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_tableName": "@item().source.tableName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "USP_Fact_SncsReportHistory-GU",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "error_alarm_merge",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_SncsReportHistory]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "USP_SNCS_File_upload_log_GET",
+				"description": "SNCS仪器文件日志",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_Fact_SncsReportHistory-GU",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_SNCS_File_upload_log_GET]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ForEach_SNCS_2",
+				"description": "1.qcinfo\n2.qcitem\n3.qc_lot_dict",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.sncs_items_2",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_SNCS_INFO_2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "sncs//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource",
+									"query": {
+										"value": "@item().copySource.query",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_tableName": "@item().source.tableName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "ForEach_SNCS_3",
+				"description": "1.cycle_counter\n2.cycle_counter_cn\n3.cycle_counter_cs\n4.cycle_counter_uf\n5.cycle_counter_xn",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ForEach_SNCS_1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.sncs_items_3",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_SNCS_INFO_3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "sncs//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_tableName": "@item().source.tableName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "USP_ServerBI_SNCS_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "USP_SNCS_File_upload_log_GET",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_ServerBI_SNCS_报表结果导入_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "error_alarm_merge",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ForEach_SNCS_3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "`error_alarm_merge`"
+					},
+					{
+						"name": "Destination",
+						"value": "sncs//error_alarm_merge"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "MySqlSource"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_wtg",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_wtg",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "ForEach_SNCS_4",
+				"description": "1.qcinfo\n2.qcitem\n3.qc_lot_dict",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ForEach_SNCS_2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.sncs_items_4",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_SNCS_INFO_4",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "sncs//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource",
+									"query": {
+										"value": "@item().copySource.query",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_tableName": "@item().source.tableName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"sncs_items_1": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"tableName": "`errorreport`"
+						},
+						"destination": {
+							"fileName": "`errorreport`.txt"
+						},
+						"copySource": {
+							"query": "select * from `errorreport`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`eventhistory`"
+						},
+						"destination": {
+							"fileName": "`eventhistory`.txt"
+						},
+						"copySource": {
+							"query": "select * from `eventhistory`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`eventreagent`"
+						},
+						"destination": {
+							"fileName": "`eventreagent`.txt"
+						},
+						"copySource": {
+							"query": "select * from `eventreagent`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`error_alarm_merge`"
+						},
+						"destination": {
+							"fileName": "`error_alarm_merge`.txt"
+						}
+					}
+				]
+			},
+			"sncs_items_2": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"tableName": "`qcinfo`"
+						},
+						"destination": {
+							"fileName": "`qcinfo`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `qcinfo` "
+						}
+					},
+					{
+						"source": {
+							"tableName": "`view_qcitem`"
+						},
+						"destination": {
+							"fileName": "`qcitem`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `view_qcitem` "
+						}
+					},
+					{
+						"source": {
+							"tableName": "`qc_lot_dict`"
+						},
+						"destination": {
+							"fileName": "`qc_lot_dict`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `qc_lot_dict` "
+						}
+					}
+				]
+			},
+			"sncs_items_3": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"tableName": "`cycle_counter`"
+						},
+						"destination": {
+							"fileName": "`cycle_counter`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `cycle_counter` "
+						}
+					},
+					{
+						"source": {
+							"tableName": "`cycle_counter_cn`"
+						},
+						"destination": {
+							"fileName": "`cycle_counter_cn`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `cycle_counter_cn` "
+						}
+					},
+					{
+						"source": {
+							"tableName": "`cycle_counter_cs`"
+						},
+						"destination": {
+							"fileName": "`cycle_counter_cs`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `cycle_counter_cs` "
+						}
+					},
+					{
+						"source": {
+							"tableName": "`cycle_counter_uf`"
+						},
+						"destination": {
+							"fileName": "`cycle_counter_uf`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `cycle_counter_uf` "
+						}
+					},
+					{
+						"source": {
+							"tableName": "`cycle_counter_xn`"
+						},
+						"destination": {
+							"fileName": "`cycle_counter_xn`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `cycle_counter_xn` "
+						}
+					}
+				]
+			},
+			"sncs_items_4": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"tableName": "`file_upload_log`"
+						},
+						"destination": {
+							"fileName": "`file_upload_log`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `file_upload_log` WHERE time_stamp > DATE_SUB(CURDATE(),INTERVAL 3 MONTH)"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`device_ipu`"
+						},
+						"destination": {
+							"fileName": "`device_ipu`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `device_ipu` "
+						}
+					},
+					{
+						"source": {
+							"tableName": "`device_m2m`"
+						},
+						"destination": {
+							"fileName": "`device_m2m`.txt"
+						},
+						"copySource": {
+							"query": "SELECT * FROM `device_m2m` "
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-30T05:44:30Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

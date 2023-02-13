@@ -1,0 +1,17 @@
+{
+	"name": "CRMWechatmin",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "CRM微信小程序",
+		"annotations": [],
+		"type": "MySql",
+		"typeProperties": {
+			"connectionString": "server=rm-bp1xfl9r1a23sr8tz.mysql.rds.aliyuncs.com;port=3306;database=wechatminiprogram;user=schroot;sslmode=1;usesystemtruststore=0",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1OWE1OGQxMC01NzZmLTRkYmMtODVhOC1iMzA0OTc5MWVlNzIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfhosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

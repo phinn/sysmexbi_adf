@@ -1,0 +1,42 @@
+{
+	"name": "SourceDataset_BlackList",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "DistributorNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DistributorName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Price",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "Province",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ModifyDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_BlackListDistributor"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

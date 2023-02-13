@@ -1,0 +1,848 @@
+{
+	"name": "SNCS",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_SNCS",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_SNCS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "sncs//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource",
+									"query": {
+										"value": "@item().copySource.query",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_tableName": "@item().source.tableName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_SNCS",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "xn_judge",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEach_SNCS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_xn_judge_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "xn_split",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "xn_judge",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_xn_split_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "uf4000_judge",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "xn_split",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_uf4000_judge_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "uf4000_split",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "uf4000_judge",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_uf4000_split_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "hiscl_split",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "uf4000_split",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_split_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "total_judge",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "hiscl_split",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_total_judge_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "total_split",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "total_judge",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_total_split_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "total_rate_split",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "total_split",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_total_rate_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "measurementcounter_total_week",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "total_rate_split",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_total_week_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "csnc_judge",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "measurementcounter_total_week",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_cscn_judge_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "cscn_split",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "csnc_judge",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Fact_measurementcounter_cscn_split_Upt]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy device_m2m",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "USP_device_m2m_TRUNCATE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MySqlSource",
+						"query": "select * from device_m2m group by Iccid ORDER BY CreatedOn DESC"
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "id",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Manufacturer",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Manufacturer",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "lat",
+									"type": "String"
+								},
+								"sink": {
+									"name": "lat",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "lon",
+									"type": "String"
+								},
+								"sink": {
+									"name": "lon",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "processor",
+									"type": "String"
+								},
+								"sink": {
+									"name": "processor",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Firmware_version",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Firmware_version",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Application_version",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Application_version",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Dtuid",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Dtuid",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Network_type",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Network_type",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Iccid",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Iccid",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Idc_connect_status",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Idc_connect_status",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Wan_status",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Wan_status",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Lan_status",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Lan_status",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Net_status",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Net_status",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Signal_strength",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Signal_strength",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Startup_time",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Startup_time",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "Shutdown_time",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Shutdown_time",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "Location_info_Lac",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Location_info_Lac",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Location_info_Cid",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Location_info_Cid",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "file_name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "file_name",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Remark",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Remark",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IsDeleted",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IsDeleted",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedBy",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CreatedBy",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedOn",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CreatedOn",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedBy",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ModifiedBy",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedOn",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ModifiedOn",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "time_stamp",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "time_stamp",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_SNCS",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_tableName": "device_m2m"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CrmExtention_device_m2m",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "USP_device_m2m_TRUNCATE",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_device_m2m_TRUNCATE]"
+				},
+				"linkedServiceName": {
+					"referenceName": "CRMExtension",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"tableName": "`hospital_info`"
+						},
+						"destination": {
+							"fileName": "`hospital_info`.txt"
+						},
+						"copySource": {
+							"query": "select * from `hospital_info`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`instrument_info`"
+						},
+						"destination": {
+							"fileName": "`instrument_info`.txt"
+						},
+						"copySource": {
+							"query": "select * from `instrument_info`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`measurementcounter_uf4000`"
+						},
+						"destination": {
+							"fileName": "`measurementcounter_uf4000`.txt"
+						},
+						"copySource": {
+							"query": "select * from `measurementcounter_uf4000`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`measurementcounter_xn`"
+						},
+						"destination": {
+							"fileName": "`measurementcounter_xn`.txt"
+						},
+						"copySource": {
+							"query": "select * from `measurementcounter_xn`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`measurementcounter`"
+						},
+						"destination": {
+							"fileName": "`measurementcounter`.txt"
+						},
+						"copySource": {
+							"query": "select * from `measurementcounter`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`measurementcounter_cscn`"
+						},
+						"destination": {
+							"fileName": "`measurementcounter_cscn`.txt"
+						},
+						"copySource": {
+							"query": "select * from `measurementcounter_cscn`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`xbarminfo`"
+						},
+						"destination": {
+							"fileName": "`xbarminfo`.txt"
+						},
+						"copySource": {
+							"query": "select * from `xbarminfo`"
+						}
+					},
+					{
+						"source": {
+							"tableName": "`xbarmitem`"
+						},
+						"destination": {
+							"fileName": "`xbarmitem`.txt"
+						},
+						"copySource": {
+							"query": "select * from `xbarmitem`"
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-10-18T05:50:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

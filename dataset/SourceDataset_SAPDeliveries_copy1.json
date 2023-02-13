@@ -1,0 +1,19 @@
+{
+	"name": "SourceDataset_SAPDeliveries_copy1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SAP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('GetSAPDeliveries?startDate=2021%2F01%2F01&endDate=2021%2F01%2F12')",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

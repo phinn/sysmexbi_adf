@@ -1,0 +1,202 @@
+{
+	"name": "SourceDataset_lip",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallationId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Contact",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContactName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProvinceId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProvinceName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CityId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CityName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DistrictId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DistrictName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "siFgpc",
+				"type": "nvarchar"
+			},
+			{
+				"name": "siLastServiceTime",
+				"type": "nvarchar"
+			},
+			{
+				"name": "siXjzq",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "serviceIntervalScore",
+				"type": "nvarchar"
+			},
+			{
+				"name": "serviceIntervalPct",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "serviceIntervalDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nffaultTime",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "nffaultAvgTime",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "nofaultScore",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nofaultPct",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "nofaultDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "instRuntime",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "instAvgruntime",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "instRuntimeScore",
+				"type": "nvarchar"
+			},
+			{
+				"name": "instRuntimeDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "instRuntimePct",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "repairtime",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "repairAvgtime",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "repairtimeScore",
+				"type": "nvarchar"
+			},
+			{
+				"name": "repairtimePct",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "repairtimeDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "errorreportMonthsum",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "errorreportAvgMonthsum",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "errorreportScore",
+				"type": "nvarchar"
+			},
+			{
+				"name": "errorreportPct",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "errorreportDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "totalScore",
+				"type": "nvarchar"
+			},
+			{
+				"name": "totalScoreDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "createtime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServerView_instrumentView"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

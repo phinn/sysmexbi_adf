@@ -1,0 +1,6 @@
+{
+	"name": "selfHostedForSAPProductPrice",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

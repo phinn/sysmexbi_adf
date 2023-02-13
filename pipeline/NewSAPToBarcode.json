@@ -1,0 +1,1999 @@
+{
+	"name": "NewSAPToBarcode",
+	"properties": {
+		"activities": [
+			{
+				"name": "goodRecipt_T",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:03:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "POST",
+						"requestBody": {
+							"value": "@concat('{\n  \"Request\": {\n    \"CPUDT_B\": \"',getPastTime(16,'Hour','yyyy'),getPastTime(16,'Hour','MM'),getPastTime(16,'Hour','dd'),'\",\n    \"CPUDT_E\": \"',getPastTime(-8,'Hour','yyyy'),getPastTime(-8,'Hour','MM'),getPastTime(-8,'Hour','dd'),'\",\n    \"CPUTM_B\": \"160000\",\n    \"CPUTM_E\": \"155959\",\n    \"MoveTyData\":[\n    {\n    \"BWART\":\"101\"\n    },\n    {\n    \"BWART\":\"311\"\n    },\n    {\n    \"BWART\":\"641\"\n    },\n    {\n    \"BWART\":\"931\"\n    }\n    ],\"YMaNoData\": [\n      {\n        \"MJAHR\": \"2022\"\n      },\n      {\n        \"MJAHR\": \"2023\"\n      }\n    ],\n    \"ZPRICE_INDICATOR\": \"\"\n}}')\n",
+							"type": "Expression"
+						},
+						"additionalHeaders": {
+							"env": "Production",
+							"accessToken": "2c4c2ee8-94ab-4317-b283-2d4dc884c60e",
+							"content-type": "application/json"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['MBLNR']"
+								},
+								"sink": {
+									"name": "MBLNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['BWART']"
+								},
+								"sink": {
+									"name": "BWART",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['MATNR']"
+								},
+								"sink": {
+									"name": "MATNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['WERKS']"
+								},
+								"sink": {
+									"name": "WERKS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['CHARG']"
+								},
+								"sink": {
+									"name": "CHARG",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['KDAUF']"
+								},
+								"sink": {
+									"name": "KDAUF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['KUNNR']"
+								},
+								"sink": {
+									"name": "KUNNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['MEINS']"
+								},
+								"sink": {
+									"name": "MEINS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['EBELN']"
+								},
+								"sink": {
+									"name": "EBELN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['SMBLN']"
+								},
+								"sink": {
+									"name": "SMBLN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['WEMPF']"
+								},
+								"sink": {
+									"name": "WEMPF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['KOSTL']"
+								},
+								"sink": {
+									"name": "KOSTL",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['UMWRK']"
+								},
+								"sink": {
+									"name": "UMWRK",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['UMMAT']"
+								},
+								"sink": {
+									"name": "UMMAT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['MENGE']"
+								},
+								"sink": {
+									"name": "MENGE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['EXTWG']"
+								},
+								"sink": {
+									"name": "EXTWG",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['NAME1']"
+								},
+								"sink": {
+									"name": "NAME1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['LGORT']"
+								},
+								"sink": {
+									"name": "LGORT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['ERFME']"
+								},
+								"sink": {
+									"name": "ERFME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['GEWEI']"
+								},
+								"sink": {
+									"name": "GEWEI",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['BTEXT']"
+								},
+								"sink": {
+									"name": "BTEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['LGOBE']"
+								},
+								"sink": {
+									"name": "LGOBE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['MATBF']"
+								},
+								"sink": {
+									"name": "MATBF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['RSPOS']"
+								},
+								"sink": {
+									"name": "RSPOS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['BUALT']"
+								},
+								"sink": {
+									"name": "BUALT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['DMBTR']"
+								},
+								"sink": {
+									"name": "DMBTR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['CPECTKTEXT']"
+								},
+								"sink": {
+									"name": "CPECTKTEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['KDPOS']"
+								},
+								"sink": {
+									"name": "KDPOS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['AUFPS']"
+								},
+								"sink": {
+									"name": "AUFPS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['ZVTEXT']"
+								},
+								"sink": {
+									"name": "ZVTEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['VFDAT']"
+								},
+								"sink": {
+									"name": "VFDAT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['GRUND']"
+								},
+								"sink": {
+									"name": "GRUND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['PRDHA']"
+								},
+								"sink": {
+									"name": "PRDHA",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['EBELP']"
+								},
+								"sink": {
+									"name": "EBELP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['HSDAT']"
+								},
+								"sink": {
+									"name": "HSDAT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['KOKRS']"
+								},
+								"sink": {
+									"name": "KOKRS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['PAOBJNR']"
+								},
+								"sink": {
+									"name": "PAOBJNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['BNBTR']"
+								},
+								"sink": {
+									"name": "BNBTR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['CPUDT_MKPF']"
+								},
+								"sink": {
+									"name": "CPUDT_MKPF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['RSNUM']"
+								},
+								"sink": {
+									"name": "RSNUM",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['MAKTX']"
+								},
+								"sink": {
+									"name": "MAKTX",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['CUOBJ_CH']"
+								},
+								"sink": {
+									"name": "CUOBJ_CH",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['UMLGO']"
+								},
+								"sink": {
+									"name": "UMLGO",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['SHKZG']"
+								},
+								"sink": {
+									"name": "SHKZG",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['error']['Response']['ItemData']",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_Copy_NewSAPGoodRecipt",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_sapgood",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "GoodsReceipt_DW_Barcode",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "goodRecipt_T",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "sapdata//GoodsReceiptT"
+					},
+					{
+						"name": "Destination",
+						"value": ".GoodsReceipt"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "MBLNR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "MBLNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BWART",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "BWART",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MATNR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "MATNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "WERKS",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "WERKS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CHARG",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CHARG",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "KDAUF",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "KDAUF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "KUNNR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "KUNNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MEINS",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "MEINS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EBELN",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "EBELN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SMBLN",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "SMBLN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "WEMPF",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "WEMPF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "KOSTL",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "KOSTL",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UMWRK",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "UMWRK",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UMMAT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "UMMAT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MENGE",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "MENGE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EXTWG",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "EXTWG",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NAME1",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "NAME1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LGORT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LGORT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ERFME",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ERFME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GEWEI",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "GEWEI",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BTEXT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "BTEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LGOBE",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LGOBE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MATBF",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "MATBF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RSPOS",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "RSPOS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BUALT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "BUALT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DMBTR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "DMBTR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CPECTKTEXT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CPECTKTEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "KDPOS",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "KDPOS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AUFPS",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "AUFPS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ZVTEXT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ZVTEXT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "VFDAT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "VFDAT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GRUND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "GRUND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PRDHA",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "PRDHA",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EBELP",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "EBELP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "HSDAT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "HSDAT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "KOKRS",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "KOKRS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PAOBJNR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "PAOBJNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BNBTR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "BNBTR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CPUDT_MKPF",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CPUDT_MKPF",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RSNUM",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "RSNUM",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MAKTX",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "MAKTX",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CUOBJ_CH",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CUOBJ_CH",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UMLGO",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "UMLGO",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SHKZG"
+								},
+								"sink": {
+									"name": "SHKZG"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DestinationDataset_sapgood",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_GoodsReceipt_Barcode",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "GoodsReceipt_DW_Barcode",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[GoodsReceiptToMain]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Barcode",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "deliveryTest",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:03:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "POST",
+						"requestBody": {
+							"value": "@concat('{\n  \"Request\": {\n    \"CHECK_IND\": \"\",\n    \"ERNAM\": \"\",\n    \"UDATE_B\": \"',getPastTime(16,'Hour','yyyy'),getPastTime(16,'Hour','MM'),getPastTime(16,'Hour','dd'),'\",\n    \"UDATE_E\": \"',getPastTime(-8,'Hour','yyyy'),getPastTime(-8,'Hour','MM'),getPastTime(-8,'Hour','dd'),'\",\n    \"UTIME_B\": \"160000\",\n    \"UTIME_E\": \"155959\",\n    \"VKORG\": \"4002\",\n    \"VSTEL\": \"\",\n    \"WBSTK\": \"\"\n}}')",
+							"type": "Expression"
+						},
+						"additionalHeaders": {
+							"env": "Production",
+							"accessToken": "2c4c2ee8-94ab-4317-b283-2d4dc884c60e",
+							"content-type": "application/json"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['VBELN']"
+								},
+								"sink": {
+									"name": "VBELN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['MATNR']"
+								},
+								"sink": {
+									"name": "MATNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['PRDHA']"
+								},
+								"sink": {
+									"name": "PRDHA",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['MATKL_DESC']"
+								},
+								"sink": {
+									"name": "MATKL_DESC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['ZDESC_EN']"
+								},
+								"sink": {
+									"name": "ZDESC_EN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['WERKS']"
+								},
+								"sink": {
+									"name": "WERKS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['LGORT']"
+								},
+								"sink": {
+									"name": "LGORT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['CHARG']"
+								},
+								"sink": {
+									"name": "CHARG",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['LFIMG']"
+								},
+								"sink": {
+									"name": "LFIMG",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['LGMNG']"
+								},
+								"sink": {
+									"name": "LGMNG",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['VRKME']"
+								},
+								"sink": {
+									"name": "VRKME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['WBSTA']"
+								},
+								"sink": {
+									"name": "WBSTA",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['ARKTX']"
+								},
+								"sink": {
+									"name": "ARKTX",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['VGBEL']"
+								},
+								"sink": {
+									"name": "VGBEL",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['error']['Response']['ItemData']",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_Copy_NewSAPDelevery",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_sapdeliveryItemData",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_SAPDeliveryItem",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "deliveryTest",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "sapdata//DeliveryNotes"
+					},
+					{
+						"name": "Destination",
+						"value": ".DeliveryNotes"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "VBELN",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "VBELN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MATNR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "MATNR",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PRDHA",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "PRDHA",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MATKL_DESC",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "MATKL_DESC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ZDESC_EN",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ZDESC_ZH",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WERKS",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "WERKS",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LGORT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LGORT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CHARG",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CHARG",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LFIMG",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LFIMG",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LGMNG",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LGMNG",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VRKME",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "VRKME",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WBSTA",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "WBSTA",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ARKTX",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ARKTX",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VGBEL"
+								},
+								"sink": {
+									"name": "VGBEL",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DestinationDataset_sapdeliveryItemData",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_deliveryItem",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "deliveryTest_CustomerData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:03:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "POST",
+						"requestBody": {
+							"value": "@concat('{\n  \"Request\": {\n    \"CHECK_IND\": \"\",\n    \"ERNAM\": \"\",\n    \"UDATE_B\": \"',getPastTime(16,'Hour','yyyy'),getPastTime(16,'Hour','MM'),getPastTime(16,'Hour','dd'),'\",\n    \"UDATE_E\": \"',getPastTime(-8,'Hour','yyyy'),getPastTime(-8,'Hour','MM'),getPastTime(-8,'Hour','dd'),'\",\n    \"UTIME_B\": \"160000\",\n    \"UTIME_E\": \"155959\",\n    \"VKORG\": \"4002\",\n    \"VSTEL\": \"\",\n    \"WBSTK\": \"\"\n}}')",
+							"type": "Expression"
+						},
+						"additionalHeaders": {
+							"env": "Production",
+							"accessToken": "2c4c2ee8-94ab-4317-b283-2d4dc884c60e",
+							"content-type": "application/json"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['VBELN']"
+								},
+								"sink": {
+									"name": "VBELN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['KUNNR']"
+								},
+								"sink": {
+									"name": "KUNNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['NAME1']"
+								},
+								"sink": {
+									"name": "NAME1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['NAME2']"
+								},
+								"sink": {
+									"name": "NAME2",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['PARVW']"
+								},
+								"sink": {
+									"name": "PARVW",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['error']['Response']['PartnerData']",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_Copy_NewSAPDelevery",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_sapdeliveryCustomerData",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_SAPDeliveryCustomerData",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "deliveryTest_CustomerData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "sapdata//DeliveryCustomerData"
+					},
+					{
+						"name": "Destination",
+						"value": ".DeliveryCustomerData"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "VBELN",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "VBELN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "KUNNR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "KUNNR",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NAME1",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "NAME1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NAME2",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "NAME2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PARVW",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "PARVW",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DestinationDataset_sapdeliveryCustomerData",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_SAPDeliveryCustomerData_Barcode",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "deliveryTest_HeaderData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:03:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "POST",
+						"requestBody": {
+							"value": "@concat('{\n  \"Request\": {\n    \"CHECK_IND\": \"\",\n    \"ERNAM\": \"\",\n    \"UDATE_B\": \"',getPastTime(16,'Hour','yyyy'),getPastTime(16,'Hour','MM'),getPastTime(16,'Hour','dd'),'\",\n    \"UDATE_E\": \"',getPastTime(-8,'Hour','yyyy'),getPastTime(-8,'Hour','MM'),getPastTime(-8,'Hour','dd'),'\",\n    \"UTIME_B\": \"160000\",\n    \"UTIME_E\": \"155959\",\n    \"VKORG\": \"4002\",\n    \"VSTEL\": \"\",\n    \"WBSTK\": \"\"\n}}')",
+							"type": "Expression"
+						},
+						"additionalHeaders": {
+							"env": "Production",
+							"accessToken": "2c4c2ee8-94ab-4317-b283-2d4dc884c60e",
+							"content-type": "application/json"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['VBELN']"
+								},
+								"sink": {
+									"name": "VBELN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['LFART']"
+								},
+								"sink": {
+									"name": "LFART",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['WADAT']"
+								},
+								"sink": {
+									"name": "WADAT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['LFDAT']"
+								},
+								"sink": {
+									"name": "LFDAT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['KUNNR']"
+								},
+								"sink": {
+									"name": "KUNNR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['VGBEL']"
+								},
+								"sink": {
+									"name": "VGBEL",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['BSTKD']"
+								},
+								"sink": {
+									"name": "BSTKD",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['error']['Response']['HeaderData']",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_Copy_NewSAPDelevery",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_sapdeliveryHeaderData",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_SAPDeliveryHeaderData",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "deliveryTest_HeaderData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "sapdata//DeliveryHeaderData"
+					},
+					{
+						"name": "Destination",
+						"value": ".DeliveryHeaderData"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "VBELN",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "VBELN",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LFART",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LFART",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "WADAT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "WADAT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LFDAT",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LFDAT",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "KUNNR",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "KUNNR",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VGBEL",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "VGBEL",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BSTKD"
+								},
+								"sink": {
+									"name": "BSTKD",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DestinationDataset_sapdeliveryHeaderData",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_SAPDeliveryHeaderData_Barcode",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Stored procedure1_copy1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy_SAPDeliveryItem",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy_SAPDeliveryCustomerData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy_SAPDeliveryHeaderData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[DeliveryToOut]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Barcode",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-02-13T03:44:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

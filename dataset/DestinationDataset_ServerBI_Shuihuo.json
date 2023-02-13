@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_ServerBI_Shuihuo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServerBI_水货试剂清单"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

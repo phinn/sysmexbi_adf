@@ -1,0 +1,70 @@
+{
+	"name": "SourceDataset_MDMProduct_Barcode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ProductNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductLineNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductLineName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductCategoryNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsCommon",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsQualityControlProduct",
+				"type": "varchar"
+			},
+			{
+				"name": "IsCalibrationProduct",
+				"type": "varchar"
+			},
+			{
+				"name": "BomSign",
+				"type": "nvarchar"
+			},
+			{
+				"name": "modify_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "start_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ProductChineseName",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_MDM_Product"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

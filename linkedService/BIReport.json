@@ -1,0 +1,16 @@
+{
+	"name": "BIReport",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=rm-bp1vl2951iv2k72aw.sqlserver.rds.aliyuncs.com;initial catalog=bireport;user id=wxbi",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxY2QzYTE5ZS1mMzBlLTQ2ODgtOTU2ZS1hMmRkMzhjOGVjYzkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfhosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

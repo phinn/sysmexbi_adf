@@ -1,0 +1,53 @@
+{
+	"name": "SourceDataset_Fitting",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "PURCHASE_NUM",
+				"type": "varchar"
+			},
+			{
+				"name": "SUPPLIER_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "warehouse_code",
+				"type": "varchar"
+			},
+			{
+				"name": "warehouse_name",
+				"type": "varchar"
+			},
+			{
+				"name": "CREATE_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "PRODUCT_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "PRODUCT_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SHIPPED_QTY",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "MESSAGE",
+				"type": "varchar"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,14 @@
+{
+	"name": "RestService1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "http://www.damaicheng.com/index.php?r=b/xskmgetconsumer",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		},
+		"description": "大麦城接口"
+	}
+}

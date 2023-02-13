@@ -1,0 +1,447 @@
+{
+	"name": "SourceDataset_o3g",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "OwnerId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StateCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "StatusCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ServiceId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ExchangeRate",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			},
+			{
+				"name": "Account",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ChaiLv",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "ChaiLvBase",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "ChuShiHua",
+				"type": "bit"
+			},
+			{
+				"name": "Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ConName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Contact",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Contact1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerAddress",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerFax",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerDes",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Dealer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerPhone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Detail",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DianQi",
+				"type": "bit"
+			},
+			{
+				"name": "GengHuan",
+				"type": "bit"
+			},
+			{
+				"name": "HfDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IfRepair",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Installation",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "JiXie",
+				"type": "bit"
+			},
+			{
+				"name": "LingJian",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "LingJianBase",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Other",
+				"type": "bit"
+			},
+			{
+				"name": "Phone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Problem",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProblemTime",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Product",
+				"type": "nvarchar"
+			},
+			{
+				"name": "QiLu",
+				"type": "bit"
+			},
+			{
+				"name": "QingXi",
+				"type": "bit"
+			},
+			{
+				"name": "ReasonDes",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RenGong",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "RenGongBase",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "RepairDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "RepairDes",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "RepairEndTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "RepairStartTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "RuanJian",
+				"type": "bit"
+			},
+			{
+				"name": "RunHua",
+				"type": "bit"
+			},
+			{
+				"name": "ServiceType",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "ShiJi",
+				"type": "bit"
+			},
+			{
+				"name": "ShuiLu",
+				"type": "bit"
+			},
+			{
+				"name": "State",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "System",
+				"type": "bit"
+			},
+			{
+				"name": "TiaoZheng",
+				"type": "bit"
+			},
+			{
+				"name": "Total",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "TotalBase",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "UseReagent",
+				"type": "bit"
+			},
+			{
+				"name": "Version",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WeiXiu",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "WeiXiuBase",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "WorkTime",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "IsDeleted",
+				"type": "bit"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ModifiedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ModifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IsDealerInput",
+				"type": "bit"
+			},
+			{
+				"name": "ProblemCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DealerUserId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SecDealerId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PaperNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ReagentBrand",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FcaNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Evaluation",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Contact2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FromSource",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Score1",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Score2",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Score3",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Score4",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Score5",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PhenomenonLayer1Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PhenomenonLayer1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PhenomenonLayer2Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PhenomenonLayer2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PhenomenonLayer3Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PhenomenonLayer3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FrequencyCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RootCauseLayer1Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RootCauseLayer1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RootCauseLayer2Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RootCauseLayer2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RootCauseLayer3Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RootCauseLayer3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ActionCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "createdtime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "view_OA_ServiceServiceBy6Month"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

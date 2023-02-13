@@ -1,0 +1,12 @@
+{
+	"name": "DataLake",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://sysmexstorage.dfs.core.chinacloudapi.cn/",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEI1NDhDNzc4LTAyMEQtNDk4NS04RTVELTY0QzExMjBGMzg4NF9mMzU5NWIxMi05NzFjLTRhMDctODZmOS05NWFhY2FjMDk3ODEiDQp9"
+		}
+	}
+}

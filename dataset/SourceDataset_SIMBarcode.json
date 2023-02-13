@@ -1,0 +1,63 @@
+{
+	"name": "SourceDataset_SIMBarcode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Barcode",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "good_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "kuwei",
+				"type": "nvarchar"
+			},
+			{
+				"name": "unit",
+				"type": "nvarchar"
+			},
+			{
+				"name": "in_number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "in_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "barcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "barcode_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "chinesename",
+				"type": "nvarchar"
+			},
+			{
+				"name": "good_code",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_SIMBarcode"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

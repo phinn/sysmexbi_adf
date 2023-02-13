@@ -1,0 +1,13 @@
+{
+	"name": "IntegralMall",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Integralall",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

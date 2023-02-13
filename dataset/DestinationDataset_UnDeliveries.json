@@ -1,0 +1,33 @@
+{
+	"name": "DestinationDataset_UnDeliveries",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"undeliveriesout": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@getPastTime(int(dataset().undeliveriesout),'Month','yyyy-MM')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('UnDliveries/',getPastTime(16,'Hour','yyyyMMdd'))",
+					"type": "Expression"
+				},
+				"fileSystem": "sapdata"
+			},
+			"compressionCodec": "gzip"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

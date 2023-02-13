@@ -1,0 +1,16 @@
+{
+	"name": "DestinationDataset_CRMWX_RemoteService",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "CRM_RemoteService"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

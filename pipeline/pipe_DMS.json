@@ -1,0 +1,173 @@
+{
+	"name": "pipe_DMS",
+	"properties": {
+		"description": "bp1u9id5x6g548io9",
+		"activities": [
+			{
+				"name": "ForEach_DMS_to_DW",
+				"description": "DMS抽取数据到数仓",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.DMS_Tables",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "COPY_DMS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().tableName}"
+								},
+								{
+									"name": "Destination",
+									"value": "dms//@{item().tableName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DMS_Tables",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item().tableName",
+											"type": "Expression"
+										},
+										"source": "@item().source"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_jn2",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().tableName"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"DMS_Tables": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": "SELECT * FROM t_dealer WHERE tombstone=0",
+						"tableName": "t_dealer"
+					},
+					{
+						"source": "SELECT * FROM t_dealer_address WHERE tombstone=0",
+						"tableName": "t_dealer_address"
+					},
+					{
+						"source": "SELECT * FROM t_purchase_order WHERE tombstone=0",
+						"tableName": "t_purchase_order"
+					},
+					{
+						"source": "SELECT * FROM t_purchase_order_item WHERE tombstone=0",
+						"tableName": "t_purchase_order_item"
+					},
+					{
+						"source": "SELECT * FROM t_purchase_order_expenses WHERE tombstone=0",
+						"tableName": "t_purchase_order_expenses"
+					},
+					{
+						"source": "SELECT * FROM t_purchase_order_item_expenses WHERE tombstone=0",
+						"tableName": "t_purchase_order_item_expenses"
+					},
+					{
+						"source": "SELECT * FROM view_lowpayment",
+						"tableName": "view_lowpayment"
+					},
+					{
+						"source": "SELECT * FROM view_lowpayment_order",
+						"tableName": "view_lowpayment_order"
+					},
+					{
+						"source": "SELECT * FROM t_purchase_order_paid",
+						"tableName": "t_purchase_order_paid"
+					},
+					{
+						"source": "SELECT * FROM t_delivery_order",
+						"tableName": "t_delivery_order"
+					},
+					{
+						"source": "SELECT * FROM t_delivery_order_item",
+						"tableName": "t_delivery_order_item"
+					},
+					{
+						"source": "SELECT * FROM t_stock_trans_app",
+						"tableName": "t_stock_trans_app"
+					},
+					{
+						"source": "SELECT * FROM t_sta_item",
+						"tableName": "t_sta_item"
+					},
+					{
+						"source": "SELECT * FROM t_contract",
+						"tableName": "t_contract"
+					},
+					{
+						"source": "SELECT * FROM t_contract_item",
+						"tableName": "t_contract_item"
+					},
+					{
+						"source": "SELECT * FROM t_contract_item_cost",
+						"tableName": "t_contract_item_cost"
+					},
+					{
+						"source": "SELECT * FROM t_purchase_order_rebate",
+						"tableName": "t_purchase_order_rebate"
+					},
+					{
+						"source": "SELECT * FROM t_purchase_order_rebate_item",
+						"tableName": "t_purchase_order_rebate_item"
+					},
+					{
+						"source": "SELECT * FROM view_order_rebate",
+						"tableName": "view_order_rebate"
+					},
+					{
+						"source": "SELECT * FROM view_order_rebate_base",
+						"tableName": "view_order_rebate_base"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-13T03:03:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

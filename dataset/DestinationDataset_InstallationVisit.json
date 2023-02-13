@@ -1,0 +1,60 @@
+{
+	"name": "DestinationDataset_InstallationVisit",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "CallVisitId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "VisitName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallationName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Contact",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Installation",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallDate",
+				"type": "datetime2",
+				"scale": 3
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime2",
+				"scale": 3
+			},
+			{
+				"name": "Phone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsSend",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "InstallationVisit"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

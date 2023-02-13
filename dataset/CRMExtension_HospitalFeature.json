@@ -1,0 +1,43 @@
+{
+	"name": "CRMExtension_HospitalFeature",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRMExtension",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "AccountId",
+				"type": "varchar"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Province",
+				"type": "nvarchar"
+			},
+			{
+				"name": "City",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Value",
+				"type": "float",
+				"precision": 15
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "HospitalFeature"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

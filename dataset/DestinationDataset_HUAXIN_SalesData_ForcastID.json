@@ -1,0 +1,90 @@
+{
+	"name": "DestinationDataset_HUAXIN_SalesData_ForcastID",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "dtime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "manufacturer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sellercode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sellername",
+				"type": "nvarchar"
+			},
+			{
+				"name": "originalprodcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "originalprodname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "goodsformat",
+				"type": "nvarchar"
+			},
+			{
+				"name": "unit",
+				"type": "nvarchar"
+			},
+			{
+				"name": "bunchno",
+				"type": "nvarchar"
+			},
+			{
+				"name": "serialno",
+				"type": "nvarchar"
+			},
+			{
+				"name": "qty",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 5
+			},
+			{
+				"name": "businesstype",
+				"type": "nvarchar"
+			},
+			{
+				"name": "adate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "createdate",
+				"type": "nvarchar"
+			},
+			{
+				"name": "plid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "orderid",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "HUAXIN_SalesData_ForcastID"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

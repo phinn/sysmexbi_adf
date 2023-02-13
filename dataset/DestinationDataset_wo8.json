@@ -1,0 +1,106 @@
+{
+	"name": "DestinationDataset_wo8",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "DEALER_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DEALER_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INVENTORY_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DEALER_PRODUCT_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCT_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCT_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SPEC",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNIT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SALE_QTY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "QTY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CATEGORY_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCTLINE_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "manufacturer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "orgnameddi",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INV_MONTH",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PURCHASE_PRICE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PURCHASER_AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "report_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "create_time",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "SERIAL_NO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HSDAT",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DDI_inventory_amount_now_copy"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

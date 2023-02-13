@@ -1,0 +1,144 @@
+{
+	"name": "SourceDataset_nna",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_DDI",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "DEALER_CODE",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "DEALER_NAME",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "INVENTORY_DATE",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "DEALER_PRODUCT_CODE",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "PRODUCT_CODE",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "PRODUCT_NAME",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "SPEC",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "SERIAL_NO",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "UNIT",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "SALE_QTY",
+				"type": "numeric",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "QTY",
+				"type": "numeric",
+				"precision": 38,
+				"scale": 5
+			},
+			{
+				"name": "CATEGORY_NAME",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "PRODUCTLINE_NAME",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "manufacturer",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "orgnameddi",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "INV_MONTH",
+				"type": "numeric",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "PURCHASE_PRICE",
+				"type": "numeric",
+				"precision": 22,
+				"scale": 6
+			},
+			{
+				"name": "PURCHASER_AMOUNT",
+				"type": "numeric",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "HSDAT",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "report_date",
+				"type": "varchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "create_time",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "view_inventory_amount_now_copy"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

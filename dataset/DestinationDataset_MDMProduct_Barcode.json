@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_MDMProduct_Barcode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Barcode",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "",
+			"table": "MDM_Product"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

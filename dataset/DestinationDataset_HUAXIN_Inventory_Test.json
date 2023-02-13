@@ -1,0 +1,37 @@
+{
+	"name": "DestinationDataset_HUAXIN_Inventory_Test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "Inventories",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "TestGzip",
+					"type": "Expression"
+				},
+				"fileSystem": "huaxin"
+			},
+			"compressionCodec": "gzip"
+		},
+		"schema": [
+			{
+				"name": "pl_id",
+				"type": "UTF8"
+			},
+			{
+				"name": "apply_month",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

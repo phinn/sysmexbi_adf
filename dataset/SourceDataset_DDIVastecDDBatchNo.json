@@ -1,0 +1,22 @@
+{
+	"name": "SourceDataset_DDIVastecDDBatchNo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_DDI",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "bunchno",
+				"type": "varchar"
+			},
+			{
+				"name": "prodcode",
+				"type": "varchar"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

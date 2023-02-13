@@ -1,0 +1,17 @@
+{
+	"name": "SourceDataset_Academictraining",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_学术用户培训会结算表"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

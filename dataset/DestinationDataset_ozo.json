@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_ozo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DW_CSD_MaintenancePack"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

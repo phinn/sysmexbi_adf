@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_NonSalesOrder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMF",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "oa_nonsalesOrder"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

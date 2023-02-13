@@ -1,0 +1,1208 @@
+{
+	"name": "WX_INFO",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_wx",
+				"description": "userinfo，DutyEngineer等基础信息表同步给数仓",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_wx",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "wxm//@{item().destination.fileName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_wx",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_wx",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_fileName": "@item().destination.fileName"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Copy_ChangeReagent",
+				"description": "试剂排查-从SNCS获取昨日上传的非A非G的XN试剂使用情况",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Destination",
+						"value": "dbo.SNCSReagent"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "MySqlSource",
+						"query": "select d.hospital_name, d.instrument_type,d.instrument_serials ,a.supply,a.lot_num, a.serial_no, a.product_code,a.manufacturer,b.time_stamp\nfrom `eventreagent_xn` a, `eventhistory` b, `instrument_info` c, `hospital_info` d\nwhere a.event_id = b.id\nand b.instrument_id = c.id\nand c.instrument_serials = d.instrument_serials\nand c.instrument_type = d.instrument_type\nand b.time_stamp < DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')\nand b.time_stamp > DATE_SUB(CURDATE(),INTERVAL 1 DAY)\nand (a.supply like '%WNR%'\nor a.supply like '%WDF%'\nor a.supply like '%RET%')\nand (a.lot_num not like 'A%'  and a.lot_num not like 'G%')\nand a.action = 'ChangeReagent'\nand a.supply like 'FL%'"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "hospital_name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "hospital_name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "instrument_type",
+									"type": "String"
+								},
+								"sink": {
+									"name": "instrument_type",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "instrument_serials",
+									"type": "String"
+								},
+								"sink": {
+									"name": "instrument_serials",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "supply",
+									"type": "String"
+								},
+								"sink": {
+									"name": "supply",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "lot_num",
+									"type": "String"
+								},
+								"sink": {
+									"name": "lot_num",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "serial_no",
+									"type": "String"
+								},
+								"sink": {
+									"name": "serial_no",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "product_code",
+									"type": "String"
+								},
+								"sink": {
+									"name": "product_code",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "manufacturer",
+									"type": "String"
+								},
+								"sink": {
+									"name": "manufacturer",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "time_stamp",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "time_stamp",
+									"type": "DateTime"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_iai",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_iai",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_Contact",
+				"description": "OA合同信息同步到微信做合同提醒用的",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.Contract"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT Title, Number, PartyB, StartDate, EndDate, Amount, CONCAT(Number, ',', Context, ',', OAID) AS Content, modify_date\nFROM   (SELECT ID AS OAID, field0008 AS Title, field0009 AS Number, field0010 AS PartyA, field0011 AS PartyB, field0014 AS StartDate, field0015 AS EndDate, field0017 AS Amount, field0078 AS Context, \n                     modify_date\n          FROM    dbo.formmain_0579\n          WHERE  (field0040 = 'sch01203' OR\n                     field0040 = 'sch00091') AND (finishedflag = 1)\n          UNION\n          SELECT ID AS OAID, field0008 AS Title, field0009 AS Number, field0010 AS PartyA, field0011 AS PartyB, field0014 AS StartDate, field0015 AS EndDate, field0017 AS Amount, field0078 AS Context, \n                    modify_date\n          FROM   dbo.formmain_0557\n          WHERE (field0040 = 'sch01203' OR\n                    field0040 = 'sch00091') AND (finishedflag = 1)\n          UNION\n          SELECT ID AS OAID, field0008 AS Title, field0009 AS Number, field0010 AS PartyA, field0011 AS PartyB, field0014 AS StartDate, field0015 AS EndDate, field0017 AS Amount, CONVERT(nvarchar, field0016) \n                    AS Context, modify_date\n          FROM   dbo.formmain_0522\n          WHERE (field0040 = 'sch01203' OR\n                    field0040 = 'sch00091') AND (finishedflag = 1)\n          UNION\n          SELECT ID AS OAID, field0008 AS Title, field0009 AS Number, field0011 AS PartyA, field0012 AS PartyB, field0014 AS StartDate, field0015 AS EndDate, field0017 AS Amount, CONVERT(nvarchar, field0035) \n                    AS Context, modify_date\n          FROM   dbo.formmain_0195\n          WHERE (field0050 = 'sch01203' OR\n                    field0050 = 'sch00091') AND (finishedflag = 1)) AS S\nWHERE (modify_date >= DATEADD(day, - 1, GETDATE()))",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Title",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Content",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "PartyB",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "PartB",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "StartDate",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "SignDate",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "Amount",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 20
+								},
+								"sink": {
+									"name": "Cost",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Content",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Remark",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EndDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "RemindDay",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_z0t",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_z0t",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_InstallationVisit",
+				"description": "装机回访",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.InstallationVisit"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "  select CallVisitId,[crm].[ServiceCallVisit].Name as VisitName,[crm].[ServiceInstallation].Name as InstallationName,[crm].[ServiceCallVisit].Account,[crm].[ServiceCallVisit].Contact,[crm].[ServiceCallVisit].Installation,[crm].[ServiceCallVisit].InstallDate,[crm].[ServiceCallVisit].CreatedOn,replace(replace(replace(Phone,' ',''),N'、',N'/'), N'。', '') Phone,cast('false' as bit) as IsSend from [crm].[ServiceCallVisit]\n  left join [crm].[ServiceInstallation] on [crm].[ServiceInstallation].[InstallationId] = [crm].[ServiceCallVisit].Installation\n  where [crm].[ServiceCallVisit].type = 1 and callvisitdate is null and convert(nvarchar,DateADD(day,0,[crm].[ServiceCallVisit].CreatedOn),112) >= DateADD(day,-14,getdate()) and DateADD(day,0,[crm].[ServiceCallVisit].CreatedOn)<= DateADD(day,-13,getdate()) and finish = 0",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CallVisitId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "CallVisitId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VisitName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "VisitName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "InstallationName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "InstallationName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Account",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Account",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Contact",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Contact",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Installation",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Installation",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "InstallDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "InstallDate",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedOn",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "CreatedOn",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "Phone",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Phone",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "IsSend",
+									"type": "Boolean",
+									"physicalType": "bit"
+								},
+								"sink": {
+									"name": "IsSend",
+									"type": "Boolean",
+									"physicalType": "bit"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_InstallationVisit",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_InstallationVisit",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_RemoteService",
+				"description": "远程回访",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": ".CRM_RemoteService"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "/****** SSMS 的 SelectTopNRows 命令的脚本  ******/\nSELECT A.[ServiceId] \n      ,A.[Account]\n\t  ,Dim_AccountBase.LB_AccountName\n      ,A.[ConName]\n      ,A.[Contact]\n      ,A.[Installation]\n\t  ,replace(phone,' ','') Phone\n      ,A.[Problem]\n      ,A.[Product]\n\t  ,I.LB_ProductType\n\t  ,I.LB_SerialNumber\n      ,A.[RepairEndTime]\n      ,A.[ServiceType]\t  \n  FROM [crm].[ServiceService] A\n  left join Dim_AccountBase on Dim_AccountBase.LB_AccountId = A.Account\n  left join Fact_Installed I on I.LB_InstallationId = A.[Installation]\n  where A.[RepairEndTime] >= GetDate() and (A.[ServiceType]=15 or A.[ServiceType]=16)\n  and len(replace(A.phone,' ',''))=11 and replace(A.phone,' ','') like '1%'",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ServiceId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ServiceId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Account",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Account",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LB_AccountName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "LB_AccountName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ConName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ConName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Contact",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Contact",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Installation",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Installation",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Phone",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Phone",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Problem",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Problem",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Product",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Product",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LB_ProductType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "LB_ProductType",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LB_SerialNumber",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "LB_SerialNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RepairEndTime",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "RepairEndTime",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "ServiceType",
+									"type": "Int16",
+									"physicalType": "smallint"
+								},
+								"sink": {
+									"name": "ServiceType",
+									"type": "Int16"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_CRMWX_RemoteService",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_CRMWX_RemoteService",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_sncsreagent_copy1",
+				"description": "整合数仓CRM信息，排除已经标记为非原装的",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy_ChangeReagent",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.SNCSReagent"
+					},
+					{
+						"name": "Destination",
+						"value": "wxm//Sncsreagent"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_Sncsreagent1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_Sncsreagent1",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_3li",
+				"description": "统合试剂排查信息倒回给数仓做报表用",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy_sncsreagent_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.ServerBI_Report_水货试剂清单"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.ServerBI_水货试剂清单"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": "TRUNCATE TABLE ServerBI_水货试剂清单;",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "installation_id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "installation_id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "instrument_type",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "instrument_type",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "instrument_serials",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "instrument_serials",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "hospital_name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "hospital_name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "time_stamp",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								},
+								"sink": {
+									"name": "time_stamp",
+									"type": "DateTime"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_ServerBI_Shuihuo",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_ServerBI_Shuihuo",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_ServicePush2",
+				"description": "服务推送",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.ServicePush2"
+					},
+					{
+						"name": "Destination",
+						"value": "wxm//ServicePush2Test"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_ServicePush2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_ServicePush2",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "USP_Truncate_SncsReagentInspect",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy_sncsreagent_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Truncate_SncsReagentInspect]"
+				},
+				"linkedServiceName": {
+					"referenceName": "CRMExtension",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ForEach_to_CrmExtension",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "USP_Truncate_SncsReagentInspect",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_to_CrmExtension_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_to_CrmExtension",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "@{item().destination.table}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "sysmexdw",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item().source.table",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SourceDataset_z4t",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": {
+											"value": "@item().destination.table",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "ServicePush"
+						},
+						"destination": {
+							"fileName": "dbo.ServicePush"
+						}
+					},
+					{
+						"source": {
+							"table": "UserInfo"
+						},
+						"destination": {
+							"fileName": "dbo.UserInfo"
+						}
+					},
+					{
+						"source": {
+							"table": "UserInfoOther"
+						},
+						"destination": {
+							"fileName": "dbo.UserInfoOther"
+						}
+					},
+					{
+						"source": {
+							"table": "WXServiceUser"
+						},
+						"destination": {
+							"fileName": "dbo.WXServiceUser"
+						}
+					},
+					{
+						"source": {
+							"table": "Invoice"
+						},
+						"destination": {
+							"fileName": "dbo.Invoice"
+						}
+					},
+					{
+						"source": {
+							"table": "InvoiceContact"
+						},
+						"destination": {
+							"fileName": "dbo.InvoiceContact"
+						}
+					},
+					{
+						"source": {
+							"table": "ServiceEvaluate"
+						},
+						"destination": {
+							"fileName": "dbo.ServiceEvaluate"
+						}
+					},
+					{
+						"source": {
+							"table": "OnDutyEngineer"
+						},
+						"destination": {
+							"fileName": "dbo.OnDutyEngineer"
+						}
+					},
+					{
+						"source": {
+							"table": "WorkingInstallationState"
+						},
+						"destination": {
+							"fileName": "dbo.WorkingInstallationState"
+						}
+					},
+					{
+						"source": {
+							"table": "ViewUserInfoApprove"
+						},
+						"destination": {
+							"fileName": "dbo.ViewUserInfoApprove"
+						}
+					},
+					{
+						"source": {
+							"table": "WorkingServiceState"
+						},
+						"destination": {
+							"fileName": "dbo.WorkingServiceState"
+						}
+					},
+					{
+						"source": {
+							"table": "WorkingServiceStateDealer"
+						},
+						"destination": {
+							"fileName": "dbo.WorkingServiceStateDealer"
+						}
+					},
+					{
+						"source": {
+							"table": "WXServiceUserHospital"
+						},
+						"destination": {
+							"fileName": "dbo.WXServiceUserHospital"
+						}
+					},
+					{
+						"source": {
+							"table": "DealerUserInfo"
+						},
+						"destination": {
+							"fileName": "dbo.DealerUserInfo"
+						}
+					}
+				]
+			},
+			"cw_to_CrmExtension_items": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "ServerBI_Report_SNCS试剂排查报警"
+						},
+						"destination": {
+							"table": "SncsReagentInspect"
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-01-04T09:17:34Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

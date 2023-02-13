@@ -1,0 +1,16 @@
+{
+	"name": "SourceDataset_Copy_NewSAPDelevery",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SAP_New",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "/v1/sap/s4/order/SyncDeliveryNotes"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

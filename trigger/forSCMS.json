@@ -1,0 +1,33 @@
+{
+	"name": "forSCMS",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipe_SCMS",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2022-11-23T03:50:00",
+				"timeZone": "China Standard Time",
+				"schedule": {
+					"hours": [
+						9,
+						11,
+						13,
+						15,
+						17
+					]
+				}
+			}
+		}
+	}
+}

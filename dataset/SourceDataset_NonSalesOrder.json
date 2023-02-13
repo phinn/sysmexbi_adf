@@ -1,0 +1,114 @@
+{
+	"name": "SourceDataset_NonSalesOrder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "领用大类",
+				"type": "nvarchar"
+			},
+			{
+				"name": "收货单位",
+				"type": "nvarchar"
+			},
+			{
+				"name": "送货地址",
+				"type": "nvarchar"
+			},
+			{
+				"name": "收货人姓名",
+				"type": "nvarchar"
+			},
+			{
+				"name": "联系电话",
+				"type": "nvarchar"
+			},
+			{
+				"name": "承运商",
+				"type": "nvarchar"
+			},
+			{
+				"name": "快递单号",
+				"type": "nvarchar"
+			},
+			{
+				"name": "发货日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "申请人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "申请人所属部门",
+				"type": "nvarchar"
+			},
+			{
+				"name": "查询电话",
+				"type": "nvarchar"
+			},
+			{
+				"name": "到货时间",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "特殊到货时间要求",
+				"type": "nvarchar"
+			},
+			{
+				"name": "产品编码",
+				"type": "nvarchar"
+			},
+			{
+				"name": "产品名称",
+				"type": "nvarchar"
+			},
+			{
+				"name": "当前库存",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "申请数量",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "实际发货数量",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "发起人备注",
+				"type": "nvarchar"
+			},
+			{
+				"name": "仓库备注",
+				"type": "nvarchar"
+			},
+			{
+				"name": "标签",
+				"type": "nvarchar"
+			},
+			{
+				"name": "modify_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

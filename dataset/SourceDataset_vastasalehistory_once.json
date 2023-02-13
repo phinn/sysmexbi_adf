@@ -1,0 +1,51 @@
+{
+	"name": "SourceDataset_vastasalehistory_once",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "salesdate",
+				"type": "nvarchar"
+			},
+			{
+				"name": "prodcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "prodname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "originalspec",
+				"type": "nvarchar"
+			},
+			{
+				"name": "originalumname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "qty",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "bunchno",
+				"type": "nvarchar"
+			},
+			{
+				"name": "oriexpirydate",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_VastaSalesHistory"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

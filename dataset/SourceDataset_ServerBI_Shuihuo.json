@@ -1,0 +1,39 @@
+{
+	"name": "SourceDataset_ServerBI_Shuihuo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "installation_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "instrument_type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "instrument_serials",
+				"type": "nvarchar"
+			},
+			{
+				"name": "hospital_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "time_stamp",
+				"type": "datetime2",
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServerBI_Report_水货试剂清单"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

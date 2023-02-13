@@ -1,0 +1,19 @@
+{
+	"name": "SourceDataset_HUAXIN_Inventory",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HUAXIN_WebService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "get_xkstocks",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

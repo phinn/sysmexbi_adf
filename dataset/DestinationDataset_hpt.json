@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_hpt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "view_inventory_amount_now_copy\r\n"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

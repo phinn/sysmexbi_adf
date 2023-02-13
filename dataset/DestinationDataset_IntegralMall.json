@@ -1,0 +1,42 @@
+{
+	"name": "DestinationDataset_IntegralMall",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "dbo.IntegralMall",
+				"fileSystem": "wxm"
+			},
+			"compressionCodec": "gzip"
+		},
+		"schema": [
+			{
+				"name": "id",
+				"type": "INT64"
+			},
+			{
+				"name": "name",
+				"type": "UTF8"
+			},
+			{
+				"name": "nickname",
+				"type": "UTF8"
+			},
+			{
+				"name": "jifen",
+				"type": "INT64"
+			},
+			{
+				"name": "b01",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

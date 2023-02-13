@@ -1,0 +1,30 @@
+{
+	"name": "SourceDataset_SystemManager",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "System",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Person",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ParentPerson",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_SystemManager"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

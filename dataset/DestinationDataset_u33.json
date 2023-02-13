@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_u33",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "SAP_MaintenancePack"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

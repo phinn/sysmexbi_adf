@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_OA_CSDCHUNKOU",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "OA_客服省份窗口人表"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

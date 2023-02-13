@@ -1,0 +1,68 @@
+{
+	"name": "SourceDataset_dingqihuifangerjiyixia",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "主键",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "省份",
+				"type": "nvarchar"
+			},
+			{
+				"name": "城市",
+				"type": "nvarchar"
+			},
+			{
+				"name": "医院名称",
+				"type": "nvarchar"
+			},
+			{
+				"name": "医院id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "联系人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "联系人手机",
+				"type": "nvarchar"
+			},
+			{
+				"name": "联系人id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "关注状态",
+				"type": "nvarchar"
+			},
+			{
+				"name": "类型",
+				"type": "nvarchar"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

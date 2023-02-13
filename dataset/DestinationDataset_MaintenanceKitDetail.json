@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_MaintenanceKitDetail",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "MaintenanceKitDetail"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

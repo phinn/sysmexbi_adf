@@ -1,0 +1,24 @@
+{
+	"name": "SourceDataset_SNCS_TEST",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNCS_TEST",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sncs_tableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().sncs_tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

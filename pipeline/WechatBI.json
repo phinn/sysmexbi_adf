@@ -1,0 +1,341 @@
+{
+	"name": "WechatBI",
+	"properties": {
+		"activities": [
+			{
+				"name": "USP_WechatBI_Finance_DealerCost_Get",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_WechatBI_Finance_DealerCost_Get]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DW",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "Finance_Crm_DealerCostDict"
+						},
+						"destination": {
+							"table": "Finance_Crm_DealerCostDict"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "DealerId",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "DealerId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DealerName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "DealerName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "YEAR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "YEAR",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "quarter",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "quarter",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "cost",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "cost",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "create_time",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "create_time",
+											"type": "DateTime"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "Finance_Crm_ServiceProductCostDict"
+						},
+						"destination": {
+							"table": "Finance_Crm_ServiceProductCostDict"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ProductId",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProductId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProductName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductNo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProductNo",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductGroup",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProductGroup",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductCategory1",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProductCategory1",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductCategory2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProductCategory2",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductCategory3",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ProductCategory3",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType1",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType1",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType2",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType2",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType3",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType3",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType4",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType4",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType5",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType5",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType6",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType6",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType7",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType7",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType8",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType8",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType9",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType9",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "CostType10",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "CostType10",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "create_time",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "create_time",
+											"type": "DateTime"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-04-07T03:53:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

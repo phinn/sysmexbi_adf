@@ -1,0 +1,804 @@
+{
+	"name": "WX_Month",
+	"properties": {
+		"activities": [
+			{
+				"name": "DingQiHuiFang_ErJiYiXia",
+				"description": "定期寻访-二级医院语句\n每半年执行一次\n流程变更过，现在执行后需要给到热线过滤去重",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.CallVisit_ServiceCustomer"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "select newid() as Id,X.主键,N'20221001'as Number,Dateadd(hour,8,GetDate()) as CreateTime,S.*,QuestionScore1=0,QuestionScore2=0,QuestionScore3=0,QuestionScore4=0,Evaluate=0 from (\nSELECT distinct a.省份,城市,a.医院名称,a.医院id,fullname as 联系人,c.MobilePhone as 联系人手机,ContactId as 联系人id ,关注状态 =null,类型 =N'联系人'\n  FROM [ServerBI_Base_装机报告] as a inner join ServerBI_Base_医院大等级 as b on a.医院等级 =b.医院等级 left join crm.ContactBase as c on a.医院ID=c.parentcustomerid\n  where 大等级 !=N'三级' and a.医院id not in (select distinct 医院 from ServerBI_Base_回访单 where 回访日期 > dateadd(month,-6,getdate()) and 医院 is not null)\n  and a.医院id not in (select distinct 医院ID from ServerBI_Base_维修单 where 维修开始时间 > dateadd(month,-6,getdate()) and 医院ID is not null)\n  and MobilePhone is not null and len(MobilePhone) =11 and MobilePhone like '1%'\n  union all\n  SELECT distinct a.省份,城市,a.医院名称,a.医院id,姓名 as 认证用户,d.手机 as 认证用户手机,id =null ,case when 关注状态 is not null then N'关注' end 关注状态,类型 =N'认证用户'\n  FROM ServerBI_Base_装机报告 as a inner join ServerBI_Base_医院大等级 as b on a.医院等级 =b.医院等级 left join crm.ContactBase as c on a.医院ID=c.parentcustomerid\n  left join ServerBI_Base_微信关注 as d on a.医院id =d.医院id\n  where 大等级 !=N'三级' and a.医院id not in (select distinct 医院 from ServerBI_Base_回访单 where 回访日期 > dateadd(month,-6,getdate()) and 医院 is not null)\n  and a.医院id not in (select distinct 医院ID from ServerBI_Base_维修单 where 维修开始时间 > dateadd(month,-6,getdate()) and 医院ID is not null)\n  and d.手机 is not null and len(d.手机) =11 and d.手机 like '1%'\n  ) as S,\n   ( select 主键,医院ID, row_number() over (partition by 医院ID order by 安装结束日期 desc) as group_idx from ServerBI_Base_装机报告) X \n   where X.医院ID=S.医院ID and X.group_idx =1",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "Id",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "省份",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Province",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "城市",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "医院id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AccountId",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "医院名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AccountName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "联系人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ContactName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "联系人手机",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ContactPhone",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "联系人id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ContactId",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "关注状态",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Suscribe",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "类型",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "UserType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateTime",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "CreateTime",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore1",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore1",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore2",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore2",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore3",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore3",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore4",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore4",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Evaluate",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Evaluate",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "主键",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "InstallerID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_dingqihuifangerjiyixia",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_dingqihuifangerjiyixia",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "DingQiHuiFang_SanJi",
+				"description": "定期寻访-二级医院语句\n每季度执行一次\n流程变更过，现在执行后需要给到热线过滤去重",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.CallVisit_ServiceCustomer"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": " select newid() as Id,X.主键,N'20221001'as Number,Dateadd(hour,8,GetDate()) as CreateTime,*,QuestionScore1=0,QuestionScore2=0,QuestionScore3=0,QuestionScore4=0,Evaluate=0 from (\nSELECT distinct a.省份,城市,a.医院名称,a.医院id,fullname as 联系人,c.MobilePhone as 联系人手机,ContactId as 联系人id ,关注状态 =null,类型 =N'联系人'\n  FROM [ServerBI_Base_装机报告] as a inner join ServerBI_Base_医院大等级 as b on a.医院等级 =b.医院等级 left join crm.ContactBase as c on a.医院ID=c.parentcustomerid\n  where 大等级 =N'三级' and a.医院id not in (select distinct 医院 from ServerBI_Base_回访单 where 回访日期 > dateadd(month,-3,getdate()) and 医院 is not null)\n  and a.医院id not in (select distinct 医院ID from ServerBI_Base_维修单 where 维修开始时间 > dateadd(month,-3,getdate()) and 医院ID is not null)\n  and MobilePhone is not null and len(MobilePhone) =11 and MobilePhone like '1%'\n  union all\n  SELECT distinct a.省份,城市,a.医院名称,a.医院id,姓名 as 认证用户,d.手机 as 认证用户手机,id =null ,case when 关注状态 is not null then N'关注' end 关注状态,类型 =N'认证用户'\n  FROM ServerBI_Base_装机报告 as a inner join ServerBI_Base_医院大等级 as b on a.医院等级 =b.医院等级 left join crm.ContactBase as c on a.医院ID=c.parentcustomerid\n  left join ServerBI_Base_微信关注 as d on a.医院id =d.医院id\n  where 大等级 =N'三级' and a.医院id not in (select distinct 医院 from ServerBI_Base_回访单 where 回访日期 > dateadd(month,-3,getdate()) and 医院 is not null)\n  and a.医院id not in (select distinct 医院ID from ServerBI_Base_维修单 where 维修开始时间 > dateadd(month,-3,getdate()) and 医院ID is not null)\n  and d.手机 is not null and len(d.手机) =11 and d.手机 like '1%'\n  ) as S\n  ,   ( select 主键,医院ID, row_number() over (partition by 医院ID order by 安装结束日期 desc) as group_idx from ServerBI_Base_装机报告) X \n   where X.医院ID=S.医院ID and X.group_idx =1",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "Id",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "省份",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Province",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "城市",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "医院id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AccountId",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "医院名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AccountName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "联系人",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ContactName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "联系人手机",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ContactPhone",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "联系人id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ContactId",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "关注状态",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Suscribe",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "类型",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "UserType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateTime",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "CreateTime",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore1",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore1",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore2",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore2",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore3",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore3",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore4",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore4",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Evaluate",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Evaluate",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "主键",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "InstallerID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_dingqihuifangerjiyixia",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_dingqihuifangerjiyixia",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy_weixiudingqihuifang",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "."
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.CallVisit_ServiceCustomer"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "select newid() as Id,C.主键,客户名称,维修单.医院ID,维修单.医院等级,维修单.省份,仪器型号,服务内容,维修开始时间,联系人姓名,电话,维修单.地区,'维修单联系人' as [UserType],N'20221001'as Number,Dateadd(hour,8,GetDate()) as CreateTime,QuestionScore1=0,QuestionScore2=0,QuestionScore3=0,QuestionScore4=0,Evaluate=0\r\nfrom 维修单\r\nleft join 装机报告 C on C.装机全称 =  维修单.装机全称\r\nwhere 维修开始时间>='2022-07-01' and 维修单.满意度评价 is null and 维修单.满意度评价 is null and 服务内容 ='修理' and 维修单.省份 <>'HongKong'and 维修单.省份 <>'Macau'  \r\n\r\n",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "Id",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Number",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "省份",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Province",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "地区",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "医院ID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AccountId",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								}
+							},
+							{
+								"source": {
+									"name": "客户名称",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AccountName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "联系人姓名",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ContactName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "电话",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ContactPhone",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "UserType",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "UserType",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CreateTime",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "CreateTime",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore1",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore1",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore2",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore2",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore3",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore3",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionScore4",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "QuestionScore4",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "Evaluate",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Evaluate",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "主键",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "InstallerID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_weixiudingqihuifang",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_weixiudingqihuifang",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-10-13T09:44:34Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

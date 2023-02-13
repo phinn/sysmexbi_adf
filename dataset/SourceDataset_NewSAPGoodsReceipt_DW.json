@@ -1,0 +1,194 @@
+{
+	"name": "SourceDataset_NewSAPGoodsReceipt_DW",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "GoodsReceipt",
+				"fileSystem": "sapdata"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "MBLNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BWART",
+				"type": "UTF8"
+			},
+			{
+				"name": "MATNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "WERKS",
+				"type": "UTF8"
+			},
+			{
+				"name": "CHARG",
+				"type": "UTF8"
+			},
+			{
+				"name": "KDAUF",
+				"type": "UTF8"
+			},
+			{
+				"name": "KUNNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "MEINS",
+				"type": "UTF8"
+			},
+			{
+				"name": "EBELN",
+				"type": "UTF8"
+			},
+			{
+				"name": "SMBLN",
+				"type": "UTF8"
+			},
+			{
+				"name": "WEMPF",
+				"type": "UTF8"
+			},
+			{
+				"name": "KOSTL",
+				"type": "UTF8"
+			},
+			{
+				"name": "UMWRK",
+				"type": "UTF8"
+			},
+			{
+				"name": "UMMAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "MENGE",
+				"type": "UTF8"
+			},
+			{
+				"name": "EXTWG",
+				"type": "UTF8"
+			},
+			{
+				"name": "NAME1",
+				"type": "UTF8"
+			},
+			{
+				"name": "LGORT",
+				"type": "UTF8"
+			},
+			{
+				"name": "ERFME",
+				"type": "UTF8"
+			},
+			{
+				"name": "GEWEI",
+				"type": "UTF8"
+			},
+			{
+				"name": "BTEXT",
+				"type": "UTF8"
+			},
+			{
+				"name": "LGOBE",
+				"type": "UTF8"
+			},
+			{
+				"name": "MATBF",
+				"type": "UTF8"
+			},
+			{
+				"name": "RSPOS",
+				"type": "UTF8"
+			},
+			{
+				"name": "BUALT",
+				"type": "UTF8"
+			},
+			{
+				"name": "DMBTR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CPECTKTEXT",
+				"type": "UTF8"
+			},
+			{
+				"name": "KDPOS",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUFPS",
+				"type": "UTF8"
+			},
+			{
+				"name": "ZVTEXT",
+				"type": "UTF8"
+			},
+			{
+				"name": "VFDAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "GRUND",
+				"type": "UTF8"
+			},
+			{
+				"name": "PRDHA",
+				"type": "UTF8"
+			},
+			{
+				"name": "EBELP",
+				"type": "UTF8"
+			},
+			{
+				"name": "HSDAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "KOKRS",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAOBJNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BNBTR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CPUDT_MKPF",
+				"type": "UTF8"
+			},
+			{
+				"name": "RSNUM",
+				"type": "UTF8"
+			},
+			{
+				"name": "MAKTX",
+				"type": "UTF8"
+			},
+			{
+				"name": "CUOBJ_CH",
+				"type": "UTF8"
+			},
+			{
+				"name": "UMLGO",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

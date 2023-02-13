@@ -1,0 +1,73 @@
+{
+	"name": "SourceDataset_fittingbarcodeoutput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Barcode",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "barcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "good_code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "good_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "good_kind",
+				"type": "nvarchar"
+			},
+			{
+				"name": "unit",
+				"type": "nvarchar"
+			},
+			{
+				"name": "in_number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "in_batch",
+				"type": "nvarchar"
+			},
+			{
+				"name": "out_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "out_company",
+				"type": "nvarchar"
+			},
+			{
+				"name": "isout",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sap_number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "maintenance_kit",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_BarcodeOutput"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

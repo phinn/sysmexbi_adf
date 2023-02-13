@@ -1,0 +1,163 @@
+{
+	"name": "crm_template_haemocytebad_host_2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ServerBI_51",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "installationname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "installationid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "province_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "province_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "city_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "city_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "hospital_Id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "hospital_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "engineer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "product_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "product_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "product_type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "dealer_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "dealer_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "installequipmentdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "item_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "instrument_state",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sample_quantity",
+				"type": "nvarchar"
+			},
+			{
+				"name": "description1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "description2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "project_info",
+				"type": "nvarchar"
+			},
+			{
+				"name": "qc_info",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sncs_send",
+				"type": "nvarchar"
+			},
+			{
+				"name": "history",
+				"type": "varchar"
+			},
+			{
+				"name": "isDeleted",
+				"type": "nvarchar"
+			},
+			{
+				"name": "createdBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "createdOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "modifiedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "modifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "createdtime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "存档日期",
+				"type": "date"
+			},
+			{
+				"name": "值",
+				"type": "nvarchar"
+			},
+			{
+				"name": "属性",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "crm_template_haemocytebad_host_2"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

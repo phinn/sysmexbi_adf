@@ -1,0 +1,17 @@
+{
+	"name": "SourceDataset_ygw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_21",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "AccountBase"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

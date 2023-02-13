@@ -1,0 +1,114 @@
+{
+	"name": "SourceDataset_g46",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "ServiceIncidentName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ServiceServiceName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "From",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Score",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SystemUser",
+				"type": "nvarchar"
+			},
+			{
+				"name": "engineer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "assistEngineer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HospitalName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TaxNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TYXYZ_TaxNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Phone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BankName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BankAccount",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContactName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContactPhone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContactAddress",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Remark",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_CRM_电子开票报表"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

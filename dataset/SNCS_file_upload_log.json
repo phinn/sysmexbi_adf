@@ -1,0 +1,16 @@
+{
+	"name": "SNCS_file_upload_log",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SNCS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`file_upload_log`"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

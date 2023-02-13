@@ -1,0 +1,75 @@
+{
+	"name": "MTA_MeetingTags_Account_Report",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "meetingId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "meetingName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "tagsId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "tagsName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "accountId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Grade",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Text",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProvinceId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "ProvinceName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CityId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "CityName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DistrictId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "DistrictName",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "MTA_MeetingTags_Account"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

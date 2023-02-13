@@ -1,0 +1,134 @@
+{
+	"name": "TEST",
+	"properties": {
+		"activities": [
+			{
+				"name": "USP_Truncate_CRMExtension",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_Truncate_CRMExtension]"
+				},
+				"linkedServiceName": {
+					"referenceName": "CRMExtension",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ForEach_to_CrmExtension",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "USP_Truncate_CRMExtension",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_to_CrmExtension_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_to_CrmExtension",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "@{item().destination.table}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "sysmexdw",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item().source.table",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SourceDataset_z4t",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": {
+											"value": "@item().destination.table",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cw_to_CrmExtension_items": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "errorcount_m40"
+						},
+						"destination": {
+							"table": "errorcount_m40"
+						}
+					},
+					{
+						"source": {
+							"table": "ServerBI_Report_SNCS试剂排查报警"
+						},
+						"destination": {
+							"table": "SncsReagentInspect"
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-08T02:08:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

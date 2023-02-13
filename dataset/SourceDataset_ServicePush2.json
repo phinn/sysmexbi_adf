@@ -1,0 +1,17 @@
+{
+	"name": "SourceDataset_ServicePush2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServicePush2"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

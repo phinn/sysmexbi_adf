@@ -1,0 +1,38 @@
+{
+	"name": "DestinationDataset_CSD_ProvinceLeader",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "省份",
+				"type": "nvarchar"
+			},
+			{
+				"name": "客服主管",
+				"type": "nvarchar"
+			},
+			{
+				"name": "客服经理",
+				"type": "nvarchar"
+			},
+			{
+				"name": "老市场办事处",
+				"type": "nvarchar"
+			},
+			{
+				"name": "新市场办事处",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "OA_客服省份窗口人表"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

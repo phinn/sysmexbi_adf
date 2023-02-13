@@ -1,0 +1,37 @@
+{
+	"name": "DestinationDataset_HUAXIN_Order_ForcastOrderID",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@getPastTime(16,'Hour','yyyyMMdd')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "OutStore",
+					"type": "Expression"
+				},
+				"fileSystem": "huaxin"
+			},
+			"compressionCodec": "gzip"
+		},
+		"schema": [
+			{
+				"name": "pl_id",
+				"type": "UTF8"
+			},
+			{
+				"name": "apply_month",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

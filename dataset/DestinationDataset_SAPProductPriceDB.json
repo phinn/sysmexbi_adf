@@ -1,0 +1,80 @@
+{
+	"name": "DestinationDataset_SAPProductPriceDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ProductNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductCategoryCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductLineCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductLineName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SecondProductLineCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SalesUnitNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SalesUnitName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BasicPrice",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PlanDeliveryDays",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IsDangerous",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Bomsn",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreateDate",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UpdateDate",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InsertTime",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "ods",
+			"table": "SAPProductPrice"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

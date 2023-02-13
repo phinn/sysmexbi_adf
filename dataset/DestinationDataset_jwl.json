@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_jwl",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServerBI_CSD_MaintenancePack"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

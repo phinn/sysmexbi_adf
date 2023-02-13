@@ -1,0 +1,134 @@
+{
+	"name": "CrmExtention_device_m2m",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRMExtension",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "varchar"
+			},
+			{
+				"name": "Manufacturer",
+				"type": "varchar"
+			},
+			{
+				"name": "lat",
+				"type": "varchar"
+			},
+			{
+				"name": "lon",
+				"type": "varchar"
+			},
+			{
+				"name": "processor",
+				"type": "varchar"
+			},
+			{
+				"name": "Firmware_version",
+				"type": "varchar"
+			},
+			{
+				"name": "Application_version",
+				"type": "varchar"
+			},
+			{
+				"name": "Dtuid",
+				"type": "varchar"
+			},
+			{
+				"name": "Network_type",
+				"type": "varchar"
+			},
+			{
+				"name": "Iccid",
+				"type": "varchar"
+			},
+			{
+				"name": "Idc_connect_status",
+				"type": "varchar"
+			},
+			{
+				"name": "Wan_status",
+				"type": "varchar"
+			},
+			{
+				"name": "Lan_status",
+				"type": "varchar"
+			},
+			{
+				"name": "Net_status",
+				"type": "varchar"
+			},
+			{
+				"name": "Signal_strength",
+				"type": "varchar"
+			},
+			{
+				"name": "Startup_time",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Shutdown_time",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Location_info_Lac",
+				"type": "varchar"
+			},
+			{
+				"name": "Location_info_Cid",
+				"type": "varchar"
+			},
+			{
+				"name": "file_name",
+				"type": "varchar"
+			},
+			{
+				"name": "Remark",
+				"type": "varchar"
+			},
+			{
+				"name": "IsDelete",
+				"type": "varchar"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "varchar"
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ModifiedBy",
+				"type": "varchar"
+			},
+			{
+				"name": "ModifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "time_stamp",
+				"type": "timestamp"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "device_m2m"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

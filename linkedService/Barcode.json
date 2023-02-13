@@ -1,0 +1,17 @@
+{
+	"name": "Barcode",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "条码系统数据库",
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=10.32.137.229;initial catalog=barcode;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwZDJjYmVhNi0wYjE4LTRlZmUtYjczNC05NzA5YWJmYzMxNDgiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfhosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

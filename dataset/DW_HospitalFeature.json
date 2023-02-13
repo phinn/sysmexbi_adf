@@ -1,0 +1,43 @@
+{
+	"name": "DW_HospitalFeature",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "省份",
+				"type": "nvarchar"
+			},
+			{
+				"name": "城市",
+				"type": "nvarchar"
+			},
+			{
+				"name": "医院名称",
+				"type": "nvarchar"
+			},
+			{
+				"name": "医院id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "值",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "属性",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ServerBI_医院标签"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

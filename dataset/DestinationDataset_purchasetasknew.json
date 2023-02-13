@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_purchasetasknew",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "PurchaseTaskNew"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

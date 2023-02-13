@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_WXSuspiciousReagentResult",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "WX_SuspiciousReagentResult"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

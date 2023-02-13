@@ -1,0 +1,59 @@
+{
+	"name": "SourceDataset_UserNavAssignment",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BIReport",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "UserID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NavCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Creater",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UpdateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Updater",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Validity",
+				"type": "varchar"
+			},
+			{
+				"name": "Position",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "System_UserNavAssignment"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

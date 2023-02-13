@@ -1,0 +1,72 @@
+{
+	"name": "SourceDataset_CSD_Travel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "SEQ",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "field0129",
+				"type": "nvarchar"
+			},
+			{
+				"name": "field0090",
+				"type": "nvarchar"
+			},
+			{
+				"name": "field0001",
+				"type": "nvarchar"
+			},
+			{
+				"name": "field0006",
+				"type": "nvarchar"
+			},
+			{
+				"name": "field0262",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "field0049",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 2
+			},
+			{
+				"name": "AVAcount",
+				"type": "decimal",
+				"precision": 31,
+				"scale": 13
+			},
+			{
+				"name": "field0311",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountType",
+				"type": "varchar"
+			},
+			{
+				"name": "field0313",
+				"type": "nvarchar"
+			},
+			{
+				"name": "field0303",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_CSD_Travel"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

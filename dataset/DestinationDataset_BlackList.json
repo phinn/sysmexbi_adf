@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_BlackList",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "BlackListDistributor"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

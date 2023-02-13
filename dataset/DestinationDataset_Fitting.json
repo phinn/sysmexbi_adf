@@ -1,0 +1,57 @@
+{
+	"name": "DestinationDataset_Fitting",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "PURCHASE_NUM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUPPLIER_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "warehouse_code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "warehouse_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATE_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "PRODUCT_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCT_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SHIPPED_QTY",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "MESSAGE",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "FittingDelivery"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,16 @@
+{
+	"name": "DestinationDataset_MaterialMasterSalesAreaData_barcode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Barcode",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "MaterialMasterSalesAreaData"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

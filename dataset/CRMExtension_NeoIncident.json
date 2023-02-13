@@ -1,0 +1,72 @@
+{
+	"name": "CRMExtension_NeoIncident",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRMExtension",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "SysUserId",
+				"type": "varchar"
+			},
+			{
+				"name": "StartOption",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EndOption",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StartDateTime",
+				"type": "varchar"
+			},
+			{
+				"name": "EndDateTime",
+				"type": "varchar"
+			},
+			{
+				"name": "Hours",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 10
+			},
+			{
+				"name": "StartId",
+				"type": "varchar"
+			},
+			{
+				"name": "EndId",
+				"type": "varchar"
+			},
+			{
+				"name": "StartJd",
+				"type": "varchar"
+			},
+			{
+				"name": "EndJd",
+				"type": "varchar"
+			},
+			{
+				"name": "StartWd",
+				"type": "varchar"
+			},
+			{
+				"name": "EndWd",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "NeoIncident"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

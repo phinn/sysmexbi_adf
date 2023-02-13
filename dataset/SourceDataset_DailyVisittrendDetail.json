@@ -1,0 +1,45 @@
+{
+	"name": "SourceDataset_DailyVisittrendDetail",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "System",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LogDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "LogIP",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LogName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Activity",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DailyVisittrendDetail"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

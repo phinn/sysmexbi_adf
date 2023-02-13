@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_OrderDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "ods",
+			"table": "SAPOrders"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

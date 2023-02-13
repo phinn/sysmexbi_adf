@@ -1,0 +1,122 @@
+{
+	"name": "SourceDataset_csdccreport",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Report",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "人民币金额",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 2
+			},
+			{
+				"name": "财务确认金额",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 2
+			},
+			{
+				"name": "实际金额",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 2
+			},
+			{
+				"name": "会计科目代码",
+				"type": "nvarchar"
+			},
+			{
+				"name": "会计科目名称",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OAID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "状态",
+				"type": "nvarchar"
+			},
+			{
+				"name": "入账日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "财务终审日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "成本中心",
+				"type": "nvarchar"
+			},
+			{
+				"name": "申请人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "申请人所属部门",
+				"type": "nvarchar"
+			},
+			{
+				"name": "申请部门",
+				"type": "nvarchar"
+			},
+			{
+				"name": "币种",
+				"type": "nvarchar"
+			},
+			{
+				"name": "供应商编号SAP",
+				"type": "nvarchar"
+			},
+			{
+				"name": "表单提交日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "发生日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "住宿费超标原因",
+				"type": "nvarchar"
+			},
+			{
+				"name": "财务签收人",
+				"type": "nvarchar"
+			},
+			{
+				"name": "财务初审通过日期",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "财务初审姓名",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "View_CCReport_CSD"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

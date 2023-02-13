@@ -1,0 +1,80 @@
+{
+	"name": "SourceDataset_FittingCRMOrderItem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "OwnerId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LoginName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WarrantyApplyId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ConName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Contact",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Installation",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InstallDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Invoice",
+				"type": "nvarchar"
+			},
+			{
+				"name": "other",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Product",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductNo2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Receive",
+				"type": "bit"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

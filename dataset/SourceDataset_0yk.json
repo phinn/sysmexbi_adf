@@ -1,0 +1,58 @@
+{
+	"name": "SourceDataset_0yk",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRMExtension",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "tagsId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "tagsName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "reasons",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsDeleted",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Status",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ModifiedBy",
+				"type": "varchar"
+			},
+			{
+				"name": "ModifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "MTA_TagsInfo"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
